@@ -3,17 +3,19 @@ All the tests
 """
 from unittest import TestCase
 
-from main import *
+from card_game.main import *
+from card_game import constants
 
 class CGTestCase(TestCase):
 
 	def setUp(self):
+		constants.DEBUG = False
 		self.card1 = Card(1, "blue")
 		self.card2 = Card(2, "blue")
 		self.cards = [self.card1, self.card2]
 		self.deck = Deck("test", self.cards)
 		self.pile = Pile()
-		self.player = Player()
+		self.player = Player("test")
 
 class AllTests(CGTestCase):
 	
