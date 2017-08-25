@@ -1,14 +1,15 @@
+.PHONY: test coverage clean
+
 PYTHON := python
 PIP := pip
+TEST_DIR := test
+TEST_RUNNER := nosetests
 
 test:
-	${PYTHON} -m unittest discover
-
-nose:
-	nosetests tests
+	${TEST_RUNNER} ${TEST_DIR}
 
 coverage:
-	nosetests tests --with-coverage --cover-erase --cover-branches --cover-inclusive --cover-html --cover-html-dir=build/htmlcov
+	${TEST_RUNNER} ${TEST_DIR} --with-coverage --cover-erase --cover-branches --cover-inclusive --cover-html --cover-html-dir=build/htmlcov
 
 clean:
 	rm -f **/*.pyc
