@@ -1,0 +1,2 @@
+DEBUG = True
+DEFAULT_TAG = "GAME"
