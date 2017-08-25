@@ -13,6 +13,7 @@ class CGTestCase(TestCase):
 		self.cards = [self.card1, self.card2]
 		self.deck = Deck("test", self.cards)
 		self.pile = Pile()
+		self.player = Player()
 
 class AllTests(CGTestCase):
 	

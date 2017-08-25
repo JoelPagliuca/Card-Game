@@ -3,7 +3,7 @@ All the code for the moment
 """
 import random
 
-__all__ = ["Card", "Deck", "Pile"]
+__all__ = ["Card", "Deck", "Pile", "GameManager", "Player", "Hand"]
 
 class Card(object):
 	"""
@@ -65,3 +65,21 @@ class Pile(object):
 		output.extend(self._cards)
 		self._cards = []
 		return output
+
+class GameManager(object):
+	pass
+
+class Hand(object):
+	"""
+	A player's hand of cards
+	"""
+	def __init__(self):
+		self._cards = []
+
+class Player(object):
+	"""
+	A Player
+	"""
+	def __init__(self, name):
+		self.name = name
+		self.hand = Hand()
