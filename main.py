@@ -21,7 +21,11 @@ class Deck(object):
 		side effect may shuffle the card list
 		"""
 		self.name = name
-		self._cards = cards
+		self._cards = []
+		self._cards.extend(cards)
+		self._initialize()
+	
+	def _initialize(self):
 		random.shuffle(self._cards)
 
 	def draw_card(self):
@@ -29,6 +33,12 @@ class Deck(object):
 		:rtype: Card
 		"""
 		return self._cards.pop()
+
+	def restock(self, cards):
+		"""
+		"""
+		self._cards.extend(cards)
+		self._initialize()
 
 class Pile(object):
 	"""
@@ -49,3 +59,9 @@ class Pile(object):
 		:rtype: Card
 		"""
 		return self._cards[-1]
+
+	def take_cards(self):
+		output = []
+		output.extend(self._cards)
+		self._cards = []
+		return output
