@@ -1,11 +1,9 @@
 """
-All the code for the moment
+All classes related to Cards
 """
 import random
 
-import util
-
-__all__ = ["Card", "Deck", "Pile", "GameManager", "Player", "Hand"]
+__all__ = ["Card", "Deck", "Pile"]
 
 class Card(object):
 	"""
@@ -76,40 +74,3 @@ class Pile(object):
 		output.extend(self._cards)
 		self._cards = []
 		return output
-
-class GameManager(object):
-	"""
-	Runs the game
-	"""
-	def __init__(self, players, deck):
-		self.players = []
-		self._current_player = 0
-		self.deck = deck
-		self.pile = Pile()
-
-	def _preRun(self):
-		self._current_player = 0
-
-	def run(self):
-		"""
-		Play the game
-		"""
-		_preRun()
-
-class Hand(object):
-	"""
-	A player's hand of cards
-	"""
-	def __init__(self):
-		self._cards = []
-
-class Player(object):
-	"""
-	A Player
-	"""
-	def __init__(self, name):
-		"""
-		:type name: str
-		"""
-		self.name = name
-		self.hand = Hand()
