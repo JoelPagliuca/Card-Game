@@ -1,24 +1,8 @@
 """
-All the tests
 """
-from unittest import TestCase
+from base_test import CGTestCase
 
-from card_game.card import *
-from card_game.player import *
-from card_game import constants
-
-class CGTestCase(TestCase):
-
-	def setUp(self):
-		constants.DEBUG = False
-		self.card1 = Card(1, "blue")
-		self.card2 = Card(2, "blue")
-		self.cards = [self.card1, self.card2]
-		self.deck = Deck("test", self.cards)
-		self.pile = Pile()
-		self.player = Player("test")
-
-class AllTests(CGTestCase):
+class CardTests(CGTestCase):
 	
 	def test_draw_card(self):
 		a_card1 = self.deck.draw_card()
@@ -31,9 +15,7 @@ class AllTests(CGTestCase):
 		self.pile.play_card(self.deck.draw_card())
 		self.deck.restock(self.pile.take_cards())
 		self.assertItemsEqual(self.deck._cards, self.cards)
-
-class PileTests(CGTestCase):
-
+	
 	def test_pile(self):
 		self.pile.play_card(self.card1)
 		self.assertEqual(self.card1, self.pile.top_card())
