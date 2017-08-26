@@ -1,4 +1,4 @@
-.PHONY: test coverage clean
+.PHONY: test clean
 
 PYTHON := python
 PIP := pip
@@ -6,14 +6,13 @@ TEST_DIR := test
 TEST_RUNNER := nosetests
 
 test:
-	${TEST_RUNNER} ${TEST_DIR}
-
-coverage:
-	${TEST_RUNNER} ${TEST_DIR} --with-coverage --cover-erase --cover-branches --cover-inclusive --cover-html --cover-html-dir=build/htmlcov
+	${TEST_RUNNER}
 
 clean:
 	rm -f **/*.pyc
 	rm -f *.pyc
+	rm -f .coverage
+	rm -f .noseids
 
 clobber: clean
 	rm -rf build

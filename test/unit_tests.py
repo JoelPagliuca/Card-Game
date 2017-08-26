@@ -3,7 +3,8 @@ All the tests
 """
 from unittest import TestCase
 
-from card_game.main import *
+from card_game.card import *
+from card_game.player import *
 from card_game import constants
 
 class CGTestCase(TestCase):
