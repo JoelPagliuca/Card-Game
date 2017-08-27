@@ -1,12 +1,20 @@
-.PHONY: test clean
+.PHONY: test clean install
 
-PYTHON := python
-PIP := pip
+PYTHON := venv/bin/python
+PIP := venv/bin/pip
 TEST_DIR := test
-TEST_RUNNER := nosetests
+TEST_RUNNER := venv/bin/nosetests
 
 test:
 	${TEST_RUNNER}
+
+environment:
+	virtualenv --no-site-packages venv
+
+install: requirements.txt
+	${PIP} install -r $<
+
+dev: environment install
 
 clean:
 	rm -f **/*.pyc
@@ -16,3 +24,4 @@ clean:
 
 clobber: clean
 	rm -rf build
+	rm -rf venv
