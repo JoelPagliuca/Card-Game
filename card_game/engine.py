@@ -40,15 +40,29 @@ class TextInterface(object):
 
 	def get_int(self, prompt=None):
 		output = None
-		while True:
+		while not output:
 			output = None
 			try:
 				output = int(self.get_input(prompt))
 			except ValueError:
 				print "That was not an integer"
-			else:
-				break
 		return output
+
+	def get_choice(self, options, prompt=""):
+		"""
+		get a choice from a user
+		user will see choices in 1 indexed form
+		:param options: list of descriptions to present to the user
+		:type options: list
+		:return: the item chosen from the list (0 index)
+		:rtype: int
+		"""
+		for i in range(len(options)):
+			print "{}: {}".format(str(i+1), options[i])
+		choice = -1
+		while not choice in range(len(options)):
+			choice = self.get_int(prompt)
+		return choice-1
 
 class Rules(object):
 	"""
