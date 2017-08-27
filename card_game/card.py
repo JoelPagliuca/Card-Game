@@ -3,7 +3,9 @@ All classes related to Cards
 """
 import random
 
-__all__ = ["Card", "Deck", "Pile"]
+import constants
+
+__all__ = ["Card", "Deck", "Pile", "DECK_SIMPLE"]
 
 class Card(object):
 	"""
