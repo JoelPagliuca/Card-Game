@@ -5,7 +5,7 @@ import random
 
 import constants
 
-__all__ = ["Card", "Deck", "Pile", "DECK_SIMPLE"]
+__all__ = ["Card", "Deck", "Pile"]
 
 class Card(object):
 	"""
