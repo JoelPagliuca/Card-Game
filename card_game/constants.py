@@ -1,6 +1,9 @@
 DEBUG = True
 DEFAULT_TAG = "GAME"
 
+# Game context keys
+CONTEXT_PLAYERS = "PLAYERS"
+
 # Card values
 CARD_ZERO = 0
 CARD_ONE = 1
