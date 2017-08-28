@@ -13,3 +13,9 @@ class Player(object):
 		"""
 		self.name = name
 		self.hand = list()
+	
+	def take_card(self, card):
+		"""
+		:type card: Card
+		"""
+		self.hand.append(card)
