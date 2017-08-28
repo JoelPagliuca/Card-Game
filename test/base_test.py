@@ -6,6 +6,8 @@ from unittest import TestCase
 from card_game.card import *
 from card_game.player import *
 from card_game.engine import *
+from card_game.rules import *
+from card_game.data.decks import *
 from card_game import constants
 
 __all__ = ["CGTestCase"]
@@ -20,6 +22,10 @@ class CGTestCase(TestCase):
 		self.deck = Deck("test", self.cards)
 		self.pile = Pile()
 
-		self.player = Player("test")
+		self.player1 = Player("juan")
+		self.player2 = Player("tulio")
+		self.player3 = Player("three")
+		self.players = [self.player1, self.player2, self.player3]
 
 		self.ti = TextInterface()
+		self.gm = GameManager(self.players, DECK_SIMPLE, SimpleRules)

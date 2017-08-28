@@ -5,7 +5,21 @@ from mock import patch
 from base_test import CGTestCase
 
 class EngineTests(CGTestCase):
-	pass
+	
+	def test_next_player(self):
+		p1 = self.gm.current_player()
+		self.gm.next_player()
+		p2 = self.gm.current_player()
+		self.assertEqual(p1, self.players[0])
+		self.assertEqual(p2, self.players[1])
+	
+	def test_change_direction(self):
+		p1 = self.gm.current_player()
+		self.gm.change_direction()
+		self.gm.next_player()
+		p2 = self.gm.current_player()
+		self.assertEqual(p1, self.players[0])
+		self.assertEqual(p2, self.players[-1])
 
 class TextInterfaceTests(CGTestCase):
 	

@@ -3,28 +3,56 @@ All the code that makes the game run
 """
 import random
 
-import util
+from card import Pile
+from util import *
 
 __all__ = ["GameManager", "TextInterface"]
 
-class GameManager(object):
+class GameManager(object): # pragma: no cover
 	"""
 	Runs the game
 	"""
-	def __init__(self, players, deck):
+	TAG = "GAMEMANAGER"
+
+	def __init__(self, players, deck, rules):
+		"""
+		:type players: list
+		:type deck: Deck
+		:type rules: Rules
+		"""
 		self.players = []
 		self._current_player = 0
+		self._direction = 1
 		self.deck = deck
 		self.pile = Pile()
+		self.rules = rules
+	
+	def next_player(self):
+		"""
+		change the current player
+		"""
+		pass #TODO
+	
+	def current_player(self):
+		"""
+		get the current player in the list
+		:rtype: Player
+		"""
+		pass #TODO
+	
+	def change_direction(self):
+		pass #TODO
 
 	def _preRun(self):
 		self._current_player = 0
+		Logger.debug("starting game", self.TAG)
 
 	def run(self):
 		"""
 		Play the game
 		"""
 		_preRun()
+		pass
 
 class TextInterface(object):
 	"""
@@ -63,12 +91,3 @@ class TextInterface(object):
 		while not choice in range(len(options)):
 			choice = self.get_int(prompt)
 		return choice-1
-
-class Rules(object):
-	"""
-	Implements the game rules
-	"""
-	def can_be_played():
-		"""
-		"""
-		pass
