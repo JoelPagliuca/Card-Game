@@ -55,7 +55,7 @@ class GameManager(object):
 		num_cards = self.rules.cards_to_deal(self._context)
 		for p in self.players:
 			for _ in range(num_cards):
-				p.take_card(self.deck.draw_card)
+				p.take_card(self.deck.draw_card())
 	
 	def shuffle(self):
 		"""
@@ -64,10 +64,31 @@ class GameManager(object):
 		self.deck.restock(self.pile.take_cards())
 
 	def _preRun(self): # pragma: no cover
+		"""
+		set the game up ready to play
+		"""
 		self._current_player = 0
 		self._context[constants.CONTEXT_PLAYERS] = self.players
 		self.who_shuffled()
+		self.pile.play_card(self.deck.draw_card())
 		Logger.debug("starting game", self.TAG)
+	
+	def get_options(self, player):
+		"""
+		figure out what options to present to the user
+		:type player: Player
+		:rtype: list
+		"""
+		options = []
+		for card in player.hand:
+			if self.rules.can_be_played(card, self._context):
+				options.append(card)
+		options.append(constants.CHOICE_DRAW_CARD)
+		return options
+
+	def display_status(self): #pragma: no cover
+		self.interface.render("Current turn: "+self.current_player().name)
+		self.interface.render("Top card: "+str(self.pile.top_card()))
 
 	def run(self): # pragma: no cover
 		"""
@@ -78,15 +99,16 @@ class GameManager(object):
 		"""
 		self._preRun()
 		while True:
+			self.display_status()
 			# get current player
 			player = self.current_player()
 			# get list of valid options for player
-			options = ["draw card"]
+			options = self.get_options(player)
 			# get option from player
 			Logger.debug("Asking "+player.name+" for choice", self.TAG)
 			choice = self.interface.get_choice(options, "Choose an action: ")
 			# act on that option TODO
-			Logger.debug("Got option \""+options[choice]+'"', self.TAG)
+			Logger.debug("Got option \""+str(options[choice])+'"', self.TAG)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
@@ -95,6 +117,7 @@ class GameManager(object):
 			self.next_player()
 			# check if there's cards left in the deck
 			if self.deck.need_to_shuffle():
+				Logger.debug("shuffling", self.TAG)
 				self.shuffle()
 		return self._context
 
