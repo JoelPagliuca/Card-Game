@@ -45,6 +45,12 @@ class Deck(object):
 		"""
 		self._cards.extend(cards)
 		self._initialize()
+	
+	def need_to_shuffle(self):
+		"""
+		:rtype: bool
+		"""
+		return len(self._cards) == 0
 
 class Pile(object):
 	"""

@@ -3,6 +3,7 @@ All the code that makes the game run
 """
 import random
 
+import constants
 from card import Pile
 from util import *
 
@@ -55,6 +56,12 @@ class GameManager(object):
 		for p in self.players:
 			for _ in range(num_cards):
 				p.take_card(self.deck.draw_card)
+	
+	def shuffle(self):
+		"""
+		shuffle the pile back into the deck
+		"""
+		self.deck.restock(self.pile.take_cards())
 
 	def _preRun(self): # pragma: no cover
 		self._current_player = 0
@@ -69,20 +76,37 @@ class GameManager(object):
 			this is to allow some anaytics to happen
 		:rtype: dict
 		"""
-		_preRun()
+		self._preRun()
 		while True:
 			# get current player
+			player = self.current_player()
 			# get list of valid options for player
+			options = ["draw card"]
 			# get option from player
+			Logger.debug("Asking "+player.name+" for choice", self.TAG)
+			choice = self.interface.get_choice(options, "Choose an action: ")
+			# act on that option TODO
+			Logger.debug("Got option \""+options[choice]+'"', self.TAG)
 			# check for winner, break if there is one
+			winner = self.rules.check_for_win(self._context)
+			if winner:
+				self._context[constants.CONTEXT_WINNER] = winner
+				break
+			self.next_player()
 			# check if there's cards left in the deck
-			break
+			if self.deck.need_to_shuffle():
+				self.shuffle()
 		return self._context
 
 class TextInterface(object):
 	"""
 	Gets user input over terminal
 	"""
+	TAG = "INTERFACE"
+	@classmethod
+	def render(cls, msg): # pragma: no cover
+		print msg
+	
 	@classmethod
 	def get_input(cls, prompt=None):
 		"""
@@ -90,6 +114,7 @@ class TextInterface(object):
 		:type prompt: str
 		:rtype: str
 		"""
+		Logger.debug("Taking input from user", cls.TAG)
 		return input(prompt)
 
 	@classmethod
@@ -99,11 +124,12 @@ class TextInterface(object):
 			output = None
 			try:
 				output = int(cls.get_input(prompt))
+				Logger.debug("Got "+str(output), cls.TAG)
 			except ValueError:
-				print "That was not an integer"
+				Logger.debug("That was not an integer", cls.TAG)
 		return output
 	
-	@classmethod		
+	@classmethod
 	def get_choice(cls, options, prompt=""):
 		"""
 		get a choice from a user
@@ -117,5 +143,5 @@ class TextInterface(object):
 			print "{}: {}".format(str(i+1), options[i])
 		choice = -1
 		while not choice in range(len(options)):
-			choice = cls.get_int(prompt)
-		return choice-1
+			choice = cls.get_int(prompt)-1
+		return choice
