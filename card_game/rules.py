@@ -8,7 +8,7 @@ __all__ = ["SimpleRules"]
 class Rules(object):
 	"""
 	Implements the game rules
-	ABSTRACT
+	ABSTRACT TODO: use abc package
 	"""
 	@classmethod
 	def can_be_played(cls, card, context={}):
@@ -24,11 +24,23 @@ class Rules(object):
 		:rtype: Player
 		"""
 		raise NotImplementedError()
+	
+	@classmethod
+	def cards_to_deal(cls, context={}):
+		"""
+		figure out how many cards to deal out
+		usually a static number, but for games like cheat
+			it depends on number of players
+		:rtype: int
+		"""
+		raise NotImplementedError()
+
 
 class SimpleRules(Rules):
 	"""
 	Basically just put any card on top of another
 	"""
+	CARDS_TO_DEAL = 7
 	@classmethod
 	def can_be_played(cls, card, context={}):
 		return True
@@ -41,3 +53,7 @@ class SimpleRules(Rules):
 			if len(p.hand) == 0:
 				return p
 		return None
+
+	@classmethod
+	def cards_to_deal(cls, context={}):
+		return cls.CARDS_TO_DEAL

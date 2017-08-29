@@ -13,12 +13,16 @@ class SimpleRulesTests(CGTestCase):
 		self.player1.take_card(self.gm.deck.draw_card())
 		self.player1.take_card(self.gm.deck.draw_card())
 		self.player2.take_card(self.gm.deck.draw_card())
-		winner = SimpleRules().check_for_win({constants.CONTEXT_PLAYERS: self.players})
+		winner = SimpleRules.check_for_win({constants.CONTEXT_PLAYERS: self.players})
 		self.assertEqual(winner, self.player3)
 	
 	def test_check_for_no_win(self):
 		self.player1.take_card(self.gm.deck.draw_card())
 		self.player2.take_card(self.gm.deck.draw_card())
 		self.player3.take_card(self.gm.deck.draw_card())
-		winner = SimpleRules().check_for_win({constants.CONTEXT_PLAYERS: self.players})
+		winner = SimpleRules.check_for_win({constants.CONTEXT_PLAYERS: self.players})
 		self.assertIsNone(winner)
+	
+	def test_cards_to_deal(self):
+		# super lame test, possible over-engineering
+		self.assertEqual(SimpleRules.cards_to_deal(), SimpleRules.CARDS_TO_DEAL)
