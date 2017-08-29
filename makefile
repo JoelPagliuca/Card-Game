@@ -24,4 +24,3 @@ clean:
 
 clobber: clean
 	rm -rf build
-	rm -rf venv
