@@ -8,7 +8,7 @@ from util import *
 
 __all__ = ["GameManager", "TextInterface"]
 
-class GameManager(object): # pragma: no cover
+class GameManager(object):
 	"""
 	Runs the game
 	"""
@@ -21,6 +21,7 @@ class GameManager(object): # pragma: no cover
 		:type rules: Rules
 		"""
 		self.players = []
+		self.players.extend(players)
 		self._current_player = 0
 		self._direction = 1
 		self.deck = deck
@@ -33,36 +34,50 @@ class GameManager(object): # pragma: no cover
 		"""
 		change the current player
 		"""
-		pass #TODO
+		self._current_player = (self._current_player + self._direction + len(self.players)) % len(self.players)
 	
 	def current_player(self):
 		"""
 		get the current player in the list
 		:rtype: Player
 		"""
-		pass #TODO
+		return self.players[self._current_player]
 	
 	def change_direction(self):
-		pass #TODO
+		self._direction *= -1
 	
 	def who_shuffled(self):
 		"""
 		deal an appropriate amount of cards to each player
+		TODO: make sure num_cards is a reasonable number
 		"""
-		pass #TODO
+		num_cards = self.rules.cards_to_deal(self._context)
+		for p in self.players:
+			for _ in range(num_cards):
+				p.take_card(self.deck.draw_card)
 
-	def _preRun(self):
+	def _preRun(self): # pragma: no cover
 		self._current_player = 0
 		self._context[constants.CONTEXT_PLAYERS] = self.players
 		self.who_shuffled()
 		Logger.debug("starting game", self.TAG)
 
-	def run(self):
+	def run(self): # pragma: no cover
 		"""
 		Play the game
+		:return: the game context
+			this is to allow some anaytics to happen
+		:rtype: dict
 		"""
 		_preRun()
-		pass
+		while True:
+			# get current player
+			# get list of valid options for player
+			# get option from player
+			# check for winner, break if there is one
+			# check if there's cards left in the deck
+			break
+		return self._context
 
 class TextInterface(object):
 	"""
