@@ -8,6 +8,9 @@ TEST_RUNNER := venv/bin/nosetests
 test:
 	${TEST_RUNNER}
 
+manual:
+	${PYTHON} main.py
+
 environment:
 	virtualenv --no-site-packages venv
 

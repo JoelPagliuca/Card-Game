@@ -48,7 +48,6 @@ class SimpleRules(Rules):
 	@classmethod
 	def check_for_win(cls, context={}):
 		players = context.get(constants.CONTEXT_PLAYERS, [])
-		print players
 		for p in players:
 			if len(p.hand) == 0:
 				return p
