@@ -8,18 +8,30 @@ class EngineTests(CGTestCase):
 	
 	def test_next_player(self):
 		p1 = self.gm.current_player()
+		self.assertEqual(p1, self.players[0])
 		self.gm.next_player()
 		p2 = self.gm.current_player()
-		self.assertEqual(p1, self.players[0])
 		self.assertEqual(p2, self.players[1])
+		self.gm.next_player()
+		p3 = self.gm.current_player()
+		self.assertEqual(p3, self.players[2])
+		self.gm.next_player()
+		p4 = self.gm.current_player()
+		self.assertEqual(p4, p1)
 	
 	def test_change_direction(self):
-		p1 = self.gm.current_player()
 		self.gm.change_direction()
+		p1 = self.gm.current_player()
+		self.assertEqual(p1, self.players[0])
 		self.gm.next_player()
 		p2 = self.gm.current_player()
-		self.assertEqual(p1, self.players[0])
-		self.assertEqual(p2, self.players[-1])
+		self.assertEqual(p2, self.players[2])
+		self.gm.next_player()
+		p3 = self.gm.current_player()
+		self.assertEqual(p3, self.players[1])
+		self.gm.next_player()
+		p4 = self.gm.current_player()
+		self.assertEqual(p4, p1)
 	
 	def test_who_shuffled(self):
 		self.gm.who_shuffled()
