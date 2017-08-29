@@ -15,7 +15,7 @@ class Card(object):
 		self.suit = suit
 	
 	def __repr__(self):
-		return "{} - {}".format(self.suit, self.value)
+		return "Card {} - {}".format(self.value, self.suit)
 
 class Deck(object):
 	"""
