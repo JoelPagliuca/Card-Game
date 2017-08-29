@@ -26,6 +26,8 @@ class GameManager(object): # pragma: no cover
 		self.deck = deck
 		self.pile = Pile()
 		self.rules = rules
+		self._context = {}
+		self.interface = TextInterface # TODO do this better
 	
 	def next_player(self):
 		"""
@@ -42,9 +44,17 @@ class GameManager(object): # pragma: no cover
 	
 	def change_direction(self):
 		pass #TODO
+	
+	def who_shuffled(self):
+		"""
+		deal an appropriate amount of cards to each player
+		"""
+		pass #TODO
 
 	def _preRun(self):
 		self._current_player = 0
+		self._context[constants.CONTEXT_PLAYERS] = self.players
+		self.who_shuffled()
 		Logger.debug("starting game", self.TAG)
 
 	def run(self):
@@ -58,7 +68,8 @@ class TextInterface(object):
 	"""
 	Gets user input over terminal
 	"""
-	def get_input(self, prompt=None):
+	@classmethod
+	def get_input(cls, prompt=None):
 		"""
 		gets a string from the user
 		:type prompt: str
@@ -66,17 +77,19 @@ class TextInterface(object):
 		"""
 		return input(prompt)
 
-	def get_int(self, prompt=None):
+	@classmethod
+	def get_int(cls, prompt=None):
 		output = None
 		while not output:
 			output = None
 			try:
-				output = int(self.get_input(prompt))
+				output = int(cls.get_input(prompt))
 			except ValueError:
 				print "That was not an integer"
 		return output
-
-	def get_choice(self, options, prompt=""):
+	
+	@classmethod		
+	def get_choice(cls, options, prompt=""):
 		"""
 		get a choice from a user
 		user will see choices in 1 indexed form
@@ -89,5 +102,5 @@ class TextInterface(object):
 			print "{}: {}".format(str(i+1), options[i])
 		choice = -1
 		while not choice in range(len(options)):
-			choice = self.get_int(prompt)
+			choice = cls.get_int(prompt)
 		return choice-1

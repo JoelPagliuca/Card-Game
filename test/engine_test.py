@@ -20,6 +20,12 @@ class EngineTests(CGTestCase):
 		p2 = self.gm.current_player()
 		self.assertEqual(p1, self.players[0])
 		self.assertEqual(p2, self.players[-1])
+	
+	def test_who_shuffled(self):
+		self.gm.who_shuffled()
+		self.assertGreater(len(self.player1.hand), 0)
+		self.assertGreater(len(self.player2.hand), 0)
+		self.assertGreater(len(self.player3.hand), 0)
 
 class TextInterfaceTests(CGTestCase):
 	
