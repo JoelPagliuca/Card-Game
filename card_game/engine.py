@@ -124,6 +124,8 @@ class GameManager(object):
 				Logger.debug("Going to play a card")
 				player.hand.remove(option)
 				self.pile.play_card(option)
+				if option.action:
+					option.action.run(self)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
