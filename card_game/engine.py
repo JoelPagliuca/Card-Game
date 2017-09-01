@@ -138,7 +138,7 @@ class TextInterface(object):
 		:rtype: str
 		"""
 		Logger.debug("Taking input from user", cls.TAG)
-		return input(prompt)
+		return raw_input(prompt)
 
 	@classmethod
 	def get_int(cls, prompt=None):

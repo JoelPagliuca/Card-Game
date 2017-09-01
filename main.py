@@ -10,9 +10,9 @@ from card_game.data.decks import DECK_SIMPLE
 
 def main():
 	# set up all the things necessary to run the game
-	player1 = Player("Renae")
-	player2 = Player("Sam")
-	player3 = Player("Gareth")
+	player1 = Player("Jason")
+	player2 = Player("Kelly")
+	player3 = Player("Garth")
 	players = [player1, player2, player3]
 
 	gm = GameManager(players, DECK_SIMPLE, SimpleRules)
