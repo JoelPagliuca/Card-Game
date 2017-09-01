@@ -4,6 +4,8 @@ from mock import patch
 
 from base_test import CGTestCase
 
+from card_game import constants
+
 class EngineTests(CGTestCase):
 	
 	def test_next_player(self):
@@ -38,6 +40,24 @@ class EngineTests(CGTestCase):
 		self.assertGreater(len(self.player1.hand), 0)
 		self.assertGreater(len(self.player2.hand), 0)
 		self.assertGreater(len(self.player3.hand), 0)
+		self.gm.shuffle()
+	
+	def test_get_options(self):
+		opts = self.gm.get_options(self.player1)
+		self.assertEqual(opts[0], constants.CHOICE_DRAW_CARD) # only option with no cards should be DRAW CARD
+		self.gm.who_shuffled()
+		opts = self.gm.get_options(self.player1)
+		self.assertEqual(len(opts), self.gm.rules.CARDS_TO_DEAL+1) # now 1 option per card + draw card
+
+	def test_shuffle(self):
+		cards_in_deck = len(self.gm.deck._cards)
+		self.gm.who_shuffled() # all players have x cards
+		for p in self.players:
+			for _ in range(self.gm.rules.CARDS_TO_DEAL):
+				self.gm.pile.play_card(p.hand.pop())
+		self.assertLess(len(self.gm.deck._cards), cards_in_deck) # just make sure some cards are now out of the deck
+		self.gm.shuffle()
+		self.assertEqual(len(self.gm.deck._cards), cards_in_deck)
 
 class TextInterfaceTests(CGTestCase):
 	

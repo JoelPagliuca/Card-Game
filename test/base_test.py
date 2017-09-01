@@ -22,10 +22,13 @@ class CGTestCase(TestCase):
 		self.deck = Deck("test", self.cards)
 		self.pile = Pile()
 
-		self.player1 = Player("juan")
-		self.player2 = Player("tulio")
-		self.player3 = Player("three")
+		self.player1 = Player("Jason")
+		self.player2 = Player("Kelly")
+		self.player3 = Player("Garth")
 		self.players = [self.player1, self.player2, self.player3]
 
 		self.ti = TextInterface()
-		self.gm = GameManager(self.players, DECK_SIMPLE, SimpleRules)
+		self.gm = GameManager(self.players, GET_SIMPLE_DECK(), SimpleRules)
+	
+	def tearDown(self):
+		pass

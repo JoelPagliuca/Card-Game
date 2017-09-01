@@ -25,3 +25,10 @@ class CardTests(CGTestCase):
 		self.pile.play_card(self.card2)
 		self.assertItemsEqual(self.cards, self.pile.take_cards())
 	
+	def test_need_to_shuffle(self):
+		# draw all the cards then check if we need to shuffle
+		no_cards = len(self.cards)
+		for _ in range(no_cards):
+			self.assertFalse(self.deck.need_to_shuffle())
+			self.deck.draw_card()
+		self.assertTrue(self.deck.need_to_shuffle())
