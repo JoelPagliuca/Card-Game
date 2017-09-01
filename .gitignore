@@ -1,0 +1,6 @@
+*.pyc
+.coverage
+.noseids
+venv/
+build/
+.vscode/
