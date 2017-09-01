@@ -39,6 +39,7 @@ class Rules(object):
 class SimpleRules(Rules):
 	"""
 	Basically just put any card on top of another
+	Also used for unit testing
 	"""
 	CARDS_TO_DEAL = 7
 	@classmethod
