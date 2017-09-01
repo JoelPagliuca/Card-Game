@@ -3,7 +3,7 @@ Rule sets for the game
 """
 import constants
 
-__all__ = ["SimpleRules"]
+__all__ = ["SimpleRules", "MelbourneRules"]
 
 class Rules(object):
 	"""
@@ -57,3 +57,16 @@ class SimpleRules(Rules):
 	@classmethod
 	def cards_to_deal(cls, context={}):
 		return cls.CARDS_TO_DEAL
+
+class MelbourneRules(SimpleRules):
+	"""
+	More complex rules used at the office
+	"""
+	@classmethod
+	def can_be_played(cls, card, context={}):
+		top_card = context.get(constants.CONTEXT_TOP_CARD, None)
+		if top_card:
+			# check if the value or suit match
+			return False
+		else:
+			return True

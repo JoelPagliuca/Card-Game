@@ -3,6 +3,7 @@
 from base_test import CGTestCase
 
 from card_game.rules import *
+from card_game.card import Card
 import card_game.constants as constants
 
 class SimpleRulesTests(CGTestCase):
@@ -26,3 +27,9 @@ class SimpleRulesTests(CGTestCase):
 	def test_cards_to_deal(self):
 		# super lame test, possible over-engineering
 		self.assertEqual(SimpleRules.cards_to_deal(), SimpleRules.CARDS_TO_DEAL)
+
+class MelbourneRulesTests(CGTestCase):
+	def test_can_be_played_simple(self):
+		ctx = {constants.CONTEXT_TOP_CARD: Card(constants.CARD_ONE, constants.CARD_BLUE)}
+		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_ONE, constants.CARD_RED), ctx))
+		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_BLUE), ctx))
