@@ -3,4 +3,6 @@
 Python code for playing card games
 
 ## Build Status
-[![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=dev)](https://travis-ci.org/JoelPagliuca/Card-Game)
+master: [![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=master)](https://travis-ci.org/JoelPagliuca/Card-Game)
+
+dev: [![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=dev)](https://travis-ci.org/JoelPagliuca/Card-Game)
