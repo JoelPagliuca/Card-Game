@@ -89,6 +89,9 @@ class GameManager(object):
 	def display_status(self): #pragma: no cover
 		self.interface.render("Current turn: "+self.current_player().name)
 		self.interface.render("Top card: "+str(self.pile.top_card()))
+	
+	def update_state(self):
+		self._context[constants.CONTEXT_TOP_CARD] = self.pile.top_card()
 
 	def run(self): # pragma: no cover
 		"""
@@ -100,6 +103,7 @@ class GameManager(object):
 		self._preRun()
 		while True:
 			self.display_status()
+			self.update_state()
 			# get current player
 			player = self.current_player()
 			# get list of valid options for player
