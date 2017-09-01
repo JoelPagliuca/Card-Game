@@ -4,7 +4,7 @@ All the code that makes the game run
 import random
 
 import constants
-from card import Pile
+from card import Pile, Card
 from util import *
 
 __all__ = ["GameManager", "TextInterface"]
@@ -29,7 +29,7 @@ class GameManager(object):
 		self.pile = Pile()
 		self.rules = rules
 		self._context = {}
-		self.interface = TextInterface # TODO do this better
+		self.interface = TextInterface # FIXME do this better
 	
 	def next_player(self):
 		"""
@@ -50,7 +50,7 @@ class GameManager(object):
 	def who_shuffled(self):
 		"""
 		deal an appropriate amount of cards to each player
-		TODO: make sure num_cards is a reasonable number
+		FIXME: make sure num_cards is a reasonable number
 		"""
 		num_cards = self.rules.cards_to_deal(self._context)
 		for p in self.players:
@@ -107,8 +107,17 @@ class GameManager(object):
 			# get option from player
 			Logger.debug("Asking "+player.name+" for choice", self.TAG)
 			choice = self.interface.get_choice(options, "Choose an action: ")
-			# act on that option TODO
+			# act on that option
 			Logger.debug("Got option \""+str(options[choice])+'"', self.TAG)
+			option = options[choice]
+			action_type = type(option) # FIXME: don't do this
+			if action_type is str:
+				Logger.debug("Going to draw another card", self.TAG)
+				player.take_card(self.deck.draw_card())
+			elif action_type is Card:
+				Logger.debug("Going to play a card")
+				player.hand.remove(option)
+				self.pile.play_card(option)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
@@ -119,6 +128,7 @@ class GameManager(object):
 			if self.deck.need_to_shuffle():
 				Logger.debug("shuffling", self.TAG)
 				self.shuffle()
+			self.interface.render("")
 		return self._context
 
 class TextInterface(object):
