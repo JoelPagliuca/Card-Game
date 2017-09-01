@@ -2,6 +2,7 @@
 Rule sets for the game
 """
 import constants
+from util import Logger
 
 __all__ = ["SimpleRules", "MelbourneRules"]
 
@@ -62,11 +63,16 @@ class MelbourneRules(SimpleRules):
 	"""
 	More complex rules used at the office
 	"""
+	TAG = "MELBRULES"
 	@classmethod
 	def can_be_played(cls, card, context={}):
 		top_card = context.get(constants.CONTEXT_TOP_CARD, None)
+		Logger.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
 		if top_card:
 			# check if the value or suit match
-			return False
+			if top_card.suit == card.suit:
+				return True
+			elif top_card.value == card.value:
+				return True
 		else:
 			return True
