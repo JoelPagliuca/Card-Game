@@ -87,8 +87,10 @@ class GameManager(object):
 		return options
 
 	def display_status(self): #pragma: no cover
-		self.interface.render("Current turn: "+self.current_player().name)
-		self.interface.render("Top card: "+str(self.pile.top_card()))
+		self.interface.render("##############################")
+		self.interface.render("# Current turn: "+self.current_player().name)
+		self.interface.render("# Top card: "+str(self.pile.top_card()))
+		self.interface.render("##############################")
 	
 	def update_state(self):
 		self._context[constants.CONTEXT_TOP_CARD] = self.pile.top_card()
