@@ -10,9 +10,10 @@ __all__ = ["Card", "Deck", "Pile"]
 class Card(object):
 	"""
 	"""
-	def __init__(self, value, suit):
+	def __init__(self, value, suit, action=None):
 		self.value = value
 		self.suit = suit
+		self.action = action
 	
 	def __repr__(self):
 		return "Card {} - {}".format(self.value, self.suit)
