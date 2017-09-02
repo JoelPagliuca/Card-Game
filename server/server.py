@@ -1,16 +1,20 @@
-import tornado.ioloop
-import tornado.web
+#!/usr/bin/env python
+"""
+credit to: https://github.com/bueda/tornado-boilerplate
+"""
+from tornado import web, ioloop, httpserver
+from tornado.options import options
 
-class MainHandler(tornado.web.RequestHandler):
-	def get(self):
-		self.write("Hello, world")
+from app import CardGameApplication
 
-def make_app():
-	return tornado.web.Application([
-		(r"/", MainHandler),
-	])
+def main():
+	app = CardGameApplication()
+	http_server = httpserver.HTTPServer(app)
+	http_server.listen(options.port)
+	ioloop.IOLoop.instance().start()
 
 if __name__ == "__main__":
-	app = make_app()
-	app.listen(8888)
-	tornado.ioloop.IOLoop.current().start()
+	try:
+		main()
+	except KeyboardInterrupt:
+		pass
