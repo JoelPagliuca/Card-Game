@@ -9,8 +9,7 @@ from app import CardGameApplication
 
 def main():
 	app = CardGameApplication()
-	http_server = httpserver.HTTPServer(app)
-	http_server.listen(options.port)
+	app.listen(options.port)
 	ioloop.IOLoop.instance().start()
 
 if __name__ == "__main__":

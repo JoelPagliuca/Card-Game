@@ -6,8 +6,7 @@ from base import BaseHandler
 __all__ = ["HelloHandler"]
 
 class HelloHandler(BaseHandler):
-	def get(self):
-		self.write("""{
-			"msg": "Hello, This is a server response"
-		}
-		""")
+	def open(self):
+		self.write_message({'msg': 'hello'})
+	def on_close(self):
+		pass
