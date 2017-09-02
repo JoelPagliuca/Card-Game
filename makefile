@@ -12,7 +12,7 @@ demo:
 	${PYTHON} main.py
 
 server:
-	${PYTHON} server/server.py
+	${PYTHON} server/app.py
 
 environment:
 	virtualenv --no-site-packages venv

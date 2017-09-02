@@ -1,4 +1,4 @@
-DEBUG = True
+DEBUG = False
 DEFAULT_TAG = "GAME"
 
 # Game context keys
