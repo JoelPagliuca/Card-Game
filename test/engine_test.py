@@ -58,6 +58,18 @@ class EngineTests(CGTestCase):
 		self.assertLess(len(self.gm.deck._cards), cards_in_deck) # just make sure some cards are now out of the deck
 		self.gm.shuffle()
 		self.assertEqual(len(self.gm.deck._cards), cards_in_deck)
+	
+	def test_update_state(self):
+		pass #TODO
+	
+	def test_observe(self):
+		pass #TODO
+	
+	def test_observe_contract(self):
+		pass #TODO
+	
+	def test_update_observers(self):
+		pass #TODO
 
 class TextInterfaceTests(CGTestCase):
 	

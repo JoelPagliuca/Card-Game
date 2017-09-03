@@ -17,7 +17,7 @@ class GameManager(object):
 
 	def __init__(self, players, deck, rules):
 		"""
-		TODO: describe all the properties
+		TODO: describe all the properties, https://stackoverflow.com/questions/8649105/how-to-show-instance-attributes-in-sphinx-doc
 		:type players: list
 		:type deck: Deck
 		:type rules: Rules
