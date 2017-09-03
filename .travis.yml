@@ -3,4 +3,9 @@ sudo: disabled
 os: Linux
 python: "2.7"
 
+branches:
+  only:
+  - master
+  - dev
+
 script: nosetests
