@@ -32,7 +32,7 @@ class GameManager(object):
 		self._context = {}
 		self.interface = TextInterface # FIXME do this better
 		self.running = False
-		self.observers = []
+		self._observers = []
 	
 	def next_player(self):
 		"""
@@ -107,13 +107,13 @@ class GameManager(object):
 		"""
 		update_method = getattr(observer, "update")
 		assert callable(update_method)
-		self.observers.append(observer)
+		self._observers.append(observer)
 	
 	def update_observers(self):
 		"""
 		give all the observers the updated game state
 		"""
-		for o in self.observers:
+		for o in self._observers:
 			o.update(self._context)
 
 	def run(self): # pragma: no cover
