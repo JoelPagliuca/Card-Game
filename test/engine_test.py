@@ -1,6 +1,6 @@
 """
 """
-from mock import patch
+from mock import patch, MagicMock, ANY
 
 from base_test import CGTestCase
 
@@ -60,16 +60,32 @@ class EngineTests(CGTestCase):
 		self.assertEqual(len(self.gm.deck._cards), cards_in_deck)
 	
 	def test_update_state(self):
-		pass #TODO
+		# see if some stuff was added to the context
+		starting_keys = self.gm._context.keys()
+		self.gm.who_shuffled()
+		self.gm.update_state()
+		self.assertGreater(len(self.gm._context.keys()), len(starting_keys))
 	
 	def test_observe(self):
-		pass #TODO
+		# check if an observer is added to the observers list
+		dummy = MagicMock() # will have .update function ;)
+		self.gm.observe(dummy)
+		self.assertListEqual(self.gm._observers, [dummy])
 	
 	def test_observe_contract(self):
-		pass #TODO
+		# make sure we have a tantrum if the observer cannot observe
+		dummy = MagicMock()
+		dummy.update = None
+		with self.assertRaises(Exception):
+			self.gm.observe(dummy)
+		self.assertListEqual(self.gm._observers, [])
 	
 	def test_update_observers(self):
-		pass #TODO
+		# check if the observers are updated
+		dummy = MagicMock()
+		self.gm.observe(dummy)
+		self.gm.update_observers()
+		dummy.update.assert_called_once_with(ANY)
 
 class TextInterfaceTests(CGTestCase):
 	
