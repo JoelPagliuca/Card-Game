@@ -17,6 +17,7 @@ class GameManager(object):
 
 	def __init__(self, players, deck, rules):
 		"""
+		TODO: describe all the properties
 		:type players: list
 		:type deck: Deck
 		:type rules: Rules
@@ -30,6 +31,8 @@ class GameManager(object):
 		self.rules = rules
 		self._context = {}
 		self.interface = TextInterface # FIXME do this better
+		self.running = False
+		self.observers = []
 	
 	def next_player(self):
 		"""
@@ -68,10 +71,11 @@ class GameManager(object):
 		set the game up ready to play
 		"""
 		self._current_player = 0
-		self._context[constants.CONTEXT_PLAYERS] = self.players
+		self._context[constants.CONTEXT.PLAYERS] = self.players
 		self.who_shuffled()
 		self.pile.play_card(self.deck.draw_card())
 		Logger.debug("starting game", self.TAG)
+		self.running = True
 	
 	def get_options(self, player):
 		"""
@@ -93,7 +97,24 @@ class GameManager(object):
 		self.interface.render("##############################")
 	
 	def update_state(self):
-		self._context[constants.CONTEXT_TOP_CARD] = self.pile.top_card()
+		self._context[constants.CONTEXT.TOP_CARD] = self.pile.top_card()
+		self._context[constants.CONTEXT.CURRENT_PLAYER] = self.current_player()
+	
+	def observe(self, observer):
+		"""
+		add the observer to the list
+		observer must have a .update
+		"""
+		update_method = getattr(observer, "update")
+		assert callable(update_method)
+		self.observers.append(observer)
+	
+	def update_observers(self):
+		"""
+		give all the observers the updated game state
+		"""
+		for o in self.observers:
+			o.update(self._context)
 
 	def run(self): # pragma: no cover
 		"""
@@ -103,9 +124,10 @@ class GameManager(object):
 		:rtype: dict
 		"""
 		self._preRun()
-		while True:
-			self.display_status()
+		while self.running:
 			self.update_state()
+			self.display_status() # FIXME: remove and make into another observer
+			self.update_observers()
 			# get current player
 			player = self.current_player()
 			# get list of valid options for player
@@ -129,8 +151,8 @@ class GameManager(object):
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
-				self._context[constants.CONTEXT_WINNER] = winner
-				break
+				self._context[constants.CONTEXT.WINNER] = winner
+				self.running = False
 			self.next_player()
 			# check if there's cards left in the deck
 			if self.deck.need_to_shuffle():
