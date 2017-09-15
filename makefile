@@ -17,7 +17,7 @@ server:
 environment:
 	virtualenv --no-site-packages venv
 
-install: requirements.txt
+install: server/requirements.txt
 	${PIP} install -r $<
 
 dev: environment install

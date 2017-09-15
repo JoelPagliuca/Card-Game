@@ -1,8 +1,21 @@
-client:
-  build: ./client
-  command: yarn start
-  volumes:
-    - ./client:/home/app/client
-    - /home/app/client/node_modules
-  ports:
-    - 3000:3000
+version: '3.1'
+
+services:
+  
+  client:
+    build: ./client
+    command: yarn start
+    volumes:
+      - ./client:/home/app/client
+      - /home/app/client/node_modules
+    ports:
+      - 3000:3000
+  
+  server:
+    build: ./server
+    command: python app.py
+    volumes:
+      - ./server:/home/app/server
+      - ./card_game:/home/app/card_game
+    ports:
+      - 8888:8888
