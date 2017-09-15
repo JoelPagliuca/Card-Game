@@ -1,7 +1,33 @@
 import React, { Component } from 'react';
-import WebSocket from 'react-websocket'
+import WebSocket from 'react-websocket';
 import logo from './logo.svg';
 import './App.css';
+
+class SocketComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: ""
+    };
+  }
+
+  handleData(data) {
+    let result = JSON.stringify(data);
+    this.setState({data: result});
+  }
+
+  render() {
+    return (
+      <div><h3>Here is the WebSocket content:</h3>
+      {this.state.data}
+
+      <WebSocket url='ws://localhost:8888/hello'
+        onMessage={this.handleData.bind(this)} />
+      
+      </div>
+    ); 
+  }
+}
 
 class App extends Component {
   render() {
@@ -11,9 +37,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <SocketComponent />
       </div>
     );
   }
