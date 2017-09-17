@@ -21,7 +21,7 @@ class SocketComponent extends Component {
       <div><h3>Here is the WebSocket content:</h3>
       {this.state.data}
 
-      <WebSocket url='ws://localhost:8888/hello'
+      <WebSocket url={"ws://"+window.location.host+"/websocket/hello"}
         onMessage={this.handleData.bind(this)} />
       
       </div>
