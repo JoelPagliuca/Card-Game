@@ -75,7 +75,10 @@ class Pile(object):
 		"""
 		:rtype: Card
 		"""
-		return self._cards[-1]
+		if self._cards:
+			return self._cards[-1]
+		else:
+			return None
 
 	def take_cards(self):
 		"""

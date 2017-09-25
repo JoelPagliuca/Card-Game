@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  
+  client:
+    build: ./client
+    command: yarn start
+    volumes:
+      - ./client:/home/app/client
+      - /home/app/client/node_modules
+    ports:
+      - 3000:3000
+    hostname: client
+  
+  server:
+    build: ./server
+    command: python app.py
+    volumes:
+      - ./server:/home/app/server
+      - ./card_game:/home/app/card_game
+    ports:
+      - 8888:8888
+    hostname: server
+  
+  proxy:
+    image: nginx:1.13.5
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 2180:80

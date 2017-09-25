@@ -1,4 +1,4 @@
-.PHONY: test clean install
+.PHONY: test clean install server demo
 
 PYTHON := venv/bin/python
 PIP := venv/bin/pip
@@ -8,13 +8,16 @@ TEST_RUNNER := venv/bin/nosetests
 test:
 	${TEST_RUNNER}
 
-manual:
+demo:
 	${PYTHON} main.py
+
+server:
+	${PYTHON} server/app.py
 
 environment:
 	virtualenv --no-site-packages venv
 
-install: requirements.txt
+install: server/requirements.txt
 	${PIP} install -r $<
 
 dev: environment install

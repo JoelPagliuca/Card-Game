@@ -49,7 +49,7 @@ class SimpleRules(Rules):
 	
 	@classmethod
 	def check_for_win(cls, context={}):
-		players = context.get(constants.CONTEXT_PLAYERS, [])
+		players = context.get(constants.CONTEXT.PLAYERS, [])
 		for p in players:
 			if len(p.hand) == 0:
 				return p
@@ -66,7 +66,7 @@ class MelbourneRules(SimpleRules):
 	TAG = "MELBRULES"
 	@classmethod
 	def can_be_played(cls, card, context={}):
-		top_card = context.get(constants.CONTEXT_TOP_CARD, None)
+		top_card = context.get(constants.CONTEXT.TOP_CARD, None)
 		Logger.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
 		if top_card:
 			# check if the value or suit match
