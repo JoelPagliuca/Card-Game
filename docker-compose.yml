@@ -28,3 +28,5 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - 2180:80
+    depends_on:
+      - server
