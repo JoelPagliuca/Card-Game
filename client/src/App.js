@@ -3,6 +3,10 @@ import WebSocket from 'react-websocket';
 import logo from './logo.svg';
 import './App.css';
 
+const CONSTANTS = {
+  WEBSOCKET: "ws://"+window.location.host+"/websocket/gameview"
+}
+
 class SocketComponent extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +25,7 @@ class SocketComponent extends Component {
       <div><h3>Here is the WebSocket content:</h3>
       {this.state.data}
 
-      <WebSocket url={"ws://"+window.location.host+"/websocket/hello"}
+      <WebSocket url={CONSTANTS.WEBSOCKET}
         onMessage={this.handleData.bind(this)} />
       
       </div>
