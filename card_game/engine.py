@@ -171,7 +171,7 @@ class TextInterface(object):
 		print msg
 	
 	@classmethod
-	def get_input(cls, prompt=None):
+	def get_input(cls, prompt=None, player=None):
 		"""
 		gets a string from the user
 		:type prompt: str
@@ -181,19 +181,19 @@ class TextInterface(object):
 		return raw_input(prompt)
 
 	@classmethod
-	def get_int(cls, prompt=None):
+	def get_int(cls, prompt=None, player=None):
 		output = None
 		while not output:
 			output = None
 			try:
-				output = int(cls.get_input(prompt))
+				output = int(cls.get_input(prompt, player))
 				Logger.debug("Got "+str(output), cls.TAG)
 			except ValueError:
 				Logger.debug("That was not an integer", cls.TAG)
 		return output
 	
 	@classmethod
-	def get_choice(cls, options, prompt=""):
+	def get_choice(cls, options, prompt="", player=None):
 		"""
 		get a choice from a user
 		user will see choices in 1 indexed form
