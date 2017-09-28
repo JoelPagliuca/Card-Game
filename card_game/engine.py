@@ -203,7 +203,7 @@ class TextInterface(object):
 		:rtype: int
 		"""
 		for i in range(len(options)):
-			print "{}: {}".format(str(i+1), options[i])
+			self.render("{}: {}".format(str(i+1), options[i]))
 		choice = -1
 		while not choice in range(len(options)):
 			choice = cls.get_int(prompt)-1
