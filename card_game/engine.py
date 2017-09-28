@@ -134,7 +134,7 @@ class GameManager(object):
 			options = self.get_options(player)
 			# get option from player
 			Logger.debug("Asking "+player.name+" for choice", self.TAG)
-			choice = self.interface.get_choice(options, "Choose an action: ")
+			choice = self.interface.get_choice(options, "Choose an action: ", player)
 			# act on that option
 			Logger.debug("Got option \""+str(options[choice])+'"', self.TAG)
 			option = options[choice]
@@ -203,8 +203,8 @@ class TextInterface(object):
 		:rtype: int
 		"""
 		for i in range(len(options)):
-			self.render("{}: {}".format(str(i+1), options[i]))
+			cls.render("{}: {}".format(str(i+1), options[i]))
 		choice = -1
 		while not choice in range(len(options)):
-			choice = cls.get_int(prompt)-1
+			choice = cls.get_int(prompt, player)-1
 		return choice
