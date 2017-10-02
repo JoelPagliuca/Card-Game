@@ -1,6 +1,8 @@
 """
 Classes related to a game player
 """
+import uuid
+
 __all__ = ["Player"]
 
 class Player(object):
@@ -11,6 +13,7 @@ class Player(object):
 		"""
 		:type name: str
 		"""
+		self.id = str(uuid.uuid4())
 		self.name = name
 		self.hand = list()
 		self._human = is_human
@@ -23,3 +26,6 @@ class Player(object):
 	
 	def is_human(self):
 		return self._human
+
+	def __hash__(self):
+		return hash(self.id)
