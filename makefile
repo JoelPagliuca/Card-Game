@@ -1,32 +1,37 @@
-.PHONY: test clean install server demo
+.PHONY: help test clean install server demo
 
 PYTHON := venv/bin/python
 PIP := venv/bin/pip
 TEST_DIR := test
 TEST_RUNNER := venv/bin/nosetests
 
-test:
+help:		## Show this help
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+
+test:		## Run unit tests
 	${TEST_RUNNER}
 
-demo:
+demo:		## Run the manual testing setup
 	${PYTHON} main.py
 
-server:
+server:		## Run the python WebSocket server
 	${PYTHON} server/app.py
 
-environment:
+environment:	## Make the virtualenv
 	virtualenv --no-site-packages venv
 
+install:	## install the requirements into the virtualenv
 install: server/requirements.txt
 	${PIP} install -r $<
 
-dev: environment install
+dev: environment install		##
 
-clean:
+clean:		##
 	rm -f **/*.pyc
 	rm -f *.pyc
 	rm -f .coverage
 	rm -f .noseids
 
+clobber:	##
 clobber: clean
 	rm -rf build
