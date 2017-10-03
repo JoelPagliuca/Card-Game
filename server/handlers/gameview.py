@@ -17,41 +17,46 @@ from card_game.data.decks import GET_UNO_DECK as GET_DECK
 
 __all__ = ["GameViewHandler"]
 
-player1 = Player("Jason")
-player2 = Player("Kelly")
-player3 = Player("Garth")
 PLAYERS = []
 
 GAME_MANAGER = None # the game manager for everything
 
 CLIENTS = {}		# Player -> Handler
 
+def start_game():
+	"""
+	background a game instance
+	connect all the clients to the game
+	"""
+	GAME_MANAGER = GameManager(PLAYERS, GET_DECK(), RULES)
+	GAME_MANAGER.interface = WebSocketInterface
+	for _, client in CLIENTS.items():
+		GAME_MANAGER.observe(client)
+	logging.info("Starting game")
+	game_thread = threading.Thread(target=GAME_MANAGER.run)
+	game_thread.start()
+
 class GameViewHandler(BaseHandler):
 	
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
-		self.client_id = str(uuid.uuid4())
-		self.player = Player(self.client_id) #FIXME
+		self.player = Player()
+		self.client_id = self.player.id
 		PLAYERS.append(self.player)
 		CLIENTS[self.player] = self
 		self.input = None
+		logging.info("New handler created for "+self.player.name)
 
 	def open(self):
 		"""
 		start a new player's connection
 		"""
 		global GAME_MANAGER
-		# create a new game if one doesn't exist
-		if not GAME_MANAGER:
-			logging.info("Got first connection, starting a game")
-			GAME_MANAGER = GameManager(PLAYERS, GET_DECK(), RULES)
-			GAME_MANAGER.interface = WebSocketInterface
-		GAME_MANAGER.observe(self)
-		# run the game if it isn't running
-		if not GAME_MANAGER.running and len(PLAYERS) >= 1:
-			logging.info("Starting game")
-			game_thread = threading.Thread(target=GAME_MANAGER.run)
-			game_thread.start()
+		logging.info("Opened connection for client "+self.client_id)
+		# start the game
+		if not GAME_MANAGER and len(PLAYERS) >= 2:	# FIXME this logic should not be here probably
+			logging.info("Got enough player connections, starting a game")
+			start_game()
 	
 	def on_message(self, message):
 		"""
@@ -60,14 +65,19 @@ class GameViewHandler(BaseHandler):
 		message = json.loads(message)
 		input_ = message.get('input', "")
 		self.input = input_
+		logging.info("got "+self.input+" from "+self.player.name)
 	
 	def on_close(self):
 		"""
 		stop the running game
 		"""
 		global GAME_MANAGER
-		GAME_MANAGER.running = False
-		GAME_MANAGER = None
+		try:	
+			GAME_MANAGER.running = False
+			GAME_MANAGER = None
+			logging.info(self.client_id+" disconnect. Game ended")
+		except:
+			pass
 	
 	def update(self, data):
 		"""
