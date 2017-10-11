@@ -1,5 +1,5 @@
 """
-Handler for viewing the game
+Handler for viewing/interacting with the game
 """
 import logging
 import json
@@ -37,10 +37,13 @@ def start_game():
 	game_thread.start()
 
 class GameViewHandler(BaseHandler):
+	"""
+	communicates with the clients and game instance
+	"""
 	
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
-		self.player = Player()
+		self.player = Player("Player") # TODO https://github.com/treyhunner/names
 		self.client_id = self.player.id
 		PLAYERS.append(self.player)
 		CLIENTS[self.player] = self
@@ -70,6 +73,7 @@ class GameViewHandler(BaseHandler):
 	def on_close(self):
 		"""
 		stop the running game
+		# FIXME take this client off the update list
 		"""
 		global GAME_MANAGER
 		try:	
