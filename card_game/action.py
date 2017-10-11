@@ -1,5 +1,5 @@
 """
-An effect on a card
+An effect on a card, this is how stuff like Reverse and Skip will be implemented
 """
 __all__ = ["Reverse"]
 

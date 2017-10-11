@@ -1,3 +1,8 @@
+"""
+Game-wide variables,
+Every card value and number we'll be needing,
+Keys for the game context
+"""
 DEBUG = False
 DEFAULT_TAG = "GAME"
 

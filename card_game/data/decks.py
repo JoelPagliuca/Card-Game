@@ -1,5 +1,5 @@
 """
-Prebuilt decks
+Prebuilt decks using constants.py
 """
 from card_game.card import Card, Deck
 from card_game.action import *
