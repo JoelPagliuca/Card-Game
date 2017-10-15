@@ -13,7 +13,7 @@ from card_game import constants
 from card_game.player import Player
 from card_game.engine import GameManager, TextInterface
 from card_game.rules import MelbourneRules as RULES
-from card_game.data.decks import GET_UNO_DECK as GET_DECK
+from card_game.data.decks import GET_UNO_DECK as GET_DECKs
 
 __all__ = ["GameViewHandler"]
 
@@ -93,6 +93,7 @@ class GameViewHandler(BaseHandler):
 		top_card = data.get(constants.CONTEXT.TOP_CARD)
 		# FIXME the json serializing here could be a bit cleaner
 		output = {
+			"action": ACTION.UPDATE,
 			"current_player": {k: current_player.__dict__[k] for k in ('name',)},
 			"top_card": {k: top_card.__dict__[k] for k in ('value', 'suit')},
 		}
@@ -138,8 +139,16 @@ class WebSocketInterface(TextInterface):
 		client = CLIENTS[player]
 		for i in range(len(options)):
 			data[i+1] = str(options[i])
+		data.update({"action": ACTION.OPTION})
 		client.write_message(data)
 		choice = -1
 		while not choice in range(len(options)):
 			choice = cls.get_int(prompt, player)-1
 		return choice
+
+class ACTION():
+	"""
+	message types being sent to the client
+	"""
+	UPDATE = "UPDATE"	# game state update
+	OPTION = "OPTION"	# request option selection from user
