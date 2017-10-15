@@ -13,7 +13,7 @@ from card_game import constants
 from card_game.player import Player
 from card_game.engine import GameManager, TextInterface
 from card_game.rules import MelbourneRules as RULES
-from card_game.data.decks import GET_UNO_DECK as GET_DECKs
+from card_game.data.decks import GET_UNO_DECK as GET_DECK
 
 __all__ = ["GameViewHandler"]
 
