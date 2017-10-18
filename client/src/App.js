@@ -71,9 +71,11 @@ export class GameSocketComponent extends Component {
 
   handleServerMessage(data) {
     // check what action
-    switch (data.action) {
+    let action = data.action;
+    delete data.action;
+    switch (action) {
       case "UPDATE":
-        console.log("UPDATE");
+        this.props.updateUI(data)
         break;
       case CONSTANTS.ACTIONS.OPTION:
         console.log("OPTIONS");
@@ -97,10 +99,15 @@ class Game extends Component {
     super(props);
   };
 
+  handleUpdateUI(data) {
+    console.log("UpdateUI");
+  }
+
   render() {
     return (
       <GameSocketComponent
-     />
+        updateUI={this.handleUpdateUI}
+      />
     );
   };
 };
