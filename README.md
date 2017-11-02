@@ -9,15 +9,19 @@ Python code for playing card games. Not a heap of functionality so far.
 | dev    | [![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=dev)](https://travis-ci.org/JoelPagliuca/Card-Game) |
 
 ## Depencies
-* `python2`
+* `docker-compose`
 
 ## Running
-`python main.py`
+`docker-compose up`
+
+Game is served [here](http://127.0.0.1:2180/)
 
 ## Development
 ### Dependencies
 * `virtualenv`
-* `makefile` - optional
+* `makefile` - optional (just read makefile for commands)
+* `docker`
+* `yarn` - optional (client can just be run through docker)
 
 ### Setup
 `make dev`
@@ -25,15 +29,30 @@ Python code for playing card games. Not a heap of functionality so far.
 ### Unit tests
 `make test`
 
+### Solution structure
+* 3 Docker containers
+	* **client**
+		* React front end
+		* port 3000
+	* **server**
+		* Python-Tornado server
+		* also mounts game logic code from `./card_game/`
+		* port 8888
+	* **proxy**
+		* Nginx reverse for the other two containers
+		* port 2180 
+		* `/` maps to **client**:3000
+		* `/websocket` maps to **server**:8888
+
 * * *
 
 ## Directory
 * card_game/
-	* python code for the actual game implementation
+	* game logic - python code for the actual game implementation
 * client/
-	* react web app for the players
+	* client - react web app
 * server/
-	* python-tornado websocket server
+	* server - python-tornado websocket
 * test/
 	* unit tests
 * .gitignore
