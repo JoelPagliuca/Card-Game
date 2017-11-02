@@ -32,7 +32,6 @@ describe("GameSocketCompoent", () => {
   });
   
   afterEach(() => {
-    console.log(updateStub.callCount)
     updateStub.reset();
   });
 });

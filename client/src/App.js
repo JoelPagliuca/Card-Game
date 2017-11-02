@@ -93,10 +93,22 @@ export class GameSocketComponent extends Component {
   }
 }
 
+/**
+ * responsible for rendering the player's view of the game
+ * mostly the hand
+ */
 class Game extends Component {
   
   constructor(props) {
     super(props);
+    this.state = {
+      hand: [
+        {"value": 8, "suit": "BLUE"},
+        {"value": 4, "suit": "PURPLE"},
+        {"value": "R", "suit": "YELLOW"},
+        {"value": 0, "suit": "RED"}
+      ]
+    }
   };
 
   handleUpdateUI(data) {
@@ -105,9 +117,21 @@ class Game extends Component {
 
   render() {
     return (
-      <GameSocketComponent
-        updateUI={this.handleUpdateUI}
-      />
+      <div>
+        <GameSocketComponent
+          updateUI={this.handleUpdateUI}
+        />
+        <h2>Your hand</h2>
+        <Stage className="Player-hand" width={700} height={700}>
+          { this.state.hand.map(function(card, index) {
+            return new Card({
+              text: card.value.toString(), 
+              suit: SUITS[card.suit], 
+              x: 10+(index*(CONSTANTS.CARD_WIDTH+10))
+            }).render();
+          }) }
+        </Stage>
+      </div>
     );
   };
 };
@@ -121,12 +145,6 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <Game />
-        <Stage width={700} height={700}>
-          <Card text={'8'} suit={SUITS.BLUE}/>
-          <Card text={'4'} suit={SUITS.PURPLE} x={CONSTANTS.CARD_WIDTH+10+10}/>
-          <Card text={'R'} suit={SUITS.YELLOW} x={2*(CONSTANTS.CARD_WIDTH+10)+10}/>
-          <Card text={'0'} suit={SUITS.RED} x={3*(CONSTANTS.CARD_WIDTH+10)+10}/>
-        </Stage>
       </div>
     );
   }
