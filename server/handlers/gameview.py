@@ -95,6 +95,8 @@ class GameViewHandler(BaseHandler):
 		output = {
 			"action": ACTION.UPDATE,
 			"current_player": {k: current_player.__dict__[k] for k in ('name',)},
+			# FIXME obviously need card.render or gameobject.toJSON
+			"hand": [{k: self.player.hand[i].__dict__[k] for k in ('value', 'suit')} for i in range(len(self.player.hand))],
 			"top_card": {k: top_card.__dict__[k] for k in ('value', 'suit')},
 		}
 		self.write_message(output)
