@@ -103,7 +103,7 @@ class Game extends Component {
     super(props);
     this.state = {
       hand: [],
-      top_card: {"value": 4, "suit": "RED"}
+      top_card: {}
     }
   };
 
