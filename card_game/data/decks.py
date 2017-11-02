@@ -26,7 +26,9 @@ for c in constants.CARD_COLORS:
 	for v in constants.CARD_VALUES:
 		CARDS_SIMPLE.append(Card(v, c))
 
+# get all action cards for every color
 CARDS_ACTION = []
 for c in constants.CARD_COLORS:
-	for v in [constants.CARD_REVERSE]:
-		CARDS_ACTION.append(Card(v, c, Reverse))
+	CARDS_ACTION.append(Card(constants.CARD_REVERSE, c, Reverse))
+	# CARDS_ACTION.append(Card(constants.CARD_SKIP, c, Skip))
+	
