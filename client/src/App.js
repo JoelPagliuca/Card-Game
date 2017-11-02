@@ -102,34 +102,48 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      hand: [],
+      top_card: {"value": 4, "suit": "RED"}
+    }
+  };
+
+  handleUpdateUI(data) {
+    this.setState({
       hand: [
         {"value": 8, "suit": "BLUE"},
         {"value": 4, "suit": "PURPLE"},
         {"value": "R", "suit": "YELLOW"},
         {"value": 0, "suit": "RED"}
-      ]
-    }
-  };
-
-  handleUpdateUI(data) {
-    console.log("UpdateUI");
+      ],
+      top_card: data.top_card
+    });
   }
 
   render() {
     return (
       <div>
         <GameSocketComponent
-          updateUI={this.handleUpdateUI}
+          updateUI={this.handleUpdateUI.bind(this)}
         />
         <h2>Your hand</h2>
-        <Stage className="Player-hand" width={700} height={700}>
-          { this.state.hand.map(function(card, index) {
+        <Stage className="Player-hand" width={700} height={200}>
+          { this.state.hand.map((card, index) => {
             return new Card({
               text: card.value.toString(), 
               suit: SUITS[card.suit], 
-              x: 10+(index*(CONSTANTS.CARD_WIDTH+10))
+              x: 10+(index*(CONSTANTS.CARD_WIDTH+10)),
+              y: 10
             }).render();
           }) }
+        </Stage>
+        <h2>Top Card</h2>
+        <Stage className="Top-card" width={250} height={200}>
+          { new Card({
+            text: this.state.top_card.value.toString(),
+            suit: SUITS[this.state.top_card.suit],
+            x: 10,
+            y: 10
+          }).render() }
         </Stage>
       </div>
     );
