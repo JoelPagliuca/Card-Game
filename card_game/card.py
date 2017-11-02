@@ -13,7 +13,7 @@ class Card(object):
 	def __init__(self, value, suit, action=None):
 		self.value = value
 		self.suit = suit
-		self.action = action
+		self.actions = [action]
 	
 	def __repr__(self):
 		return "Card {} - {}".format(self.value, self.suit)
