@@ -17,9 +17,6 @@ class CONTEXT():
 	CURRENT_ACTION = "ACTIVE_ACTION"
 	CURRENT_PLAYER = "CURRENT_PLAYER"
 
-# Text input choices
-CHOICE_DRAW_CARD = "draw a card"
-
 # Card values
 CARD_ZERO = 0
 CARD_ONE = 1

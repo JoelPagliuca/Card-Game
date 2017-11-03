@@ -11,10 +11,10 @@ __all__ = ["Card", "Deck", "Pile"]
 class Card(object):
 	"""
 	"""
-	def __init__(self, value, suit, action=None):
+	def __init__(self, value, suit):
 		self.value = value
 		self.suit = suit
-		self.actions = [action]
+		self.actions = []	# needs to be an array because WILD will have 4 actions....
 		self.id = id(self)
 	
 	def __repr__(self):

@@ -24,11 +24,16 @@ def GET_UNO_DECK():
 CARDS_SIMPLE = []
 for c in constants.CARD_COLORS:
 	for v in constants.CARD_VALUES:
-		CARDS_SIMPLE.append(Card(v, c))
+		card = Card(v, c)
+		# add the play card action to each card
+		card.actions.append(PlayCard(card))
+		CARDS_SIMPLE.append(card)
 
 # get all action cards for every color
 CARDS_ACTION = []
 for c in constants.CARD_COLORS:
-	CARDS_ACTION.append(Card(constants.CARD_REVERSE, c, Reverse))
+	card = Card(constants.CARD_REVERSE, c)
+	card.actions.append(Reverse(card))
+	CARDS_ACTION.append(card)
 	# CARDS_ACTION.append(Card(constants.CARD_SKIP, c, Skip))
 	

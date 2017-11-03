@@ -5,6 +5,7 @@ import random
 
 import constants
 from card import Pile, Card
+from action import DrawCard
 from util import *
 
 __all__ = ["GameManager", "TextInterface"]
@@ -86,8 +87,8 @@ class GameManager(object):
 		options = []
 		for card in player.hand:
 			if self.rules.can_be_played(card, self._context):
-				options.append(card)
-		options.append(constants.CHOICE_DRAW_CARD)
+				options.extend(card.actions)
+		options.append(DrawCard(None))
 		return options
 
 	def display_status(self): #pragma: no cover
