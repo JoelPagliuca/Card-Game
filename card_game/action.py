@@ -6,6 +6,7 @@ Assume that the current player is who played the card with the action
 __all__ = ["PlayCard", "DrawCard", "Reverse"]
 
 class Action(object):
+	TAG = "ACTION"
 	def __init__(self, card):
 		self.card = card
 	"""
@@ -19,7 +20,15 @@ class Action(object):
 		"""
 		raise NotImplementedError()
 
+	def toDict(self):
+		"""
+		Convert to JSON string
+		:rtype: dict
+		"""
+		return {"action": self.TAG, card: self.card.toDict()}
+
 class PlayCard(Action):
+	TAG = "PLAY"
 	"""
 	Just play the card
 	"""
@@ -29,6 +38,7 @@ class PlayCard(Action):
 		game_manager.pile.play_card(self.card)
 
 class DrawCard(Action):
+	TAG = "DRAW"
 	def run(self, game_manager):
 		"""
 		Make the action happen
@@ -38,6 +48,7 @@ class DrawCard(Action):
 		game_manager.current_player().take_card(top_card)
 
 class Reverse(PlayCard):
+	TAG = "REVERSE"
 	def run(self, game_manager):
 		super(Reverse, self).run(game_manager)
 		game_manager.change_direction()

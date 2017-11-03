@@ -2,6 +2,7 @@
 All classes related to Cards
 """
 import random
+import json # FIXME probably gonna get imported everywhere
 
 import constants
 
@@ -14,9 +15,16 @@ class Card(object):
 		self.value = value
 		self.suit = suit
 		self.actions = [action]
+		self.id = id(self)
 	
 	def __repr__(self):
 		return "Card {} - {}".format(self.value, self.suit)
+
+	def toDict(self):
+		"""
+		:rtype: dict
+		"""
+		return {"value": self.value, "suit": self.suit, "id": self.id}
 
 class Deck(object):
 	"""
