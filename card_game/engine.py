@@ -140,7 +140,7 @@ class GameManager(object):
 			Logger.debug("Got option \""+str(options[choice])+'"', self.TAG)
 			option = options[choice]
 			Logger.debug("Running action "+str(option.__class__.__name__), self.TAG)
-			option.run(this)
+			option.run(self)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
