@@ -25,6 +25,7 @@ class DrawCardTest(CGTestCase):
 class ReverseTest(CGTestCase):
 	@patch('card_game.engine.GameManager.change_direction')
 	def test_reverse(self, change_direction_mock):
+		self.gm.current_player().take_card(self.card1)
 		rev = Reverse(self.card1)
 		rev.run(self.gm)
 		change_direction_mock.assert_called_once()

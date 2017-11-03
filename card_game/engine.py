@@ -138,17 +138,8 @@ class GameManager(object):
 			# act on that option
 			Logger.debug("Got option \""+str(options[choice])+'"', self.TAG)
 			option = options[choice]
+			Logger.debug("Running action "+str(option.__class__.__name__), self.TAG)
 			option.run(this)
-			# action_type = type(option) # FIXME: don't do this
-			# if action_type is str:
-			# 	Logger.debug("Going to draw another card", self.TAG)
-			# 	player.take_card(self.deck.draw_card())
-			# elif action_type is Card:
-			# 	Logger.debug("Going to play a card")
-			# 	player.hand.remove(option)
-			# 	self.pile.play_card(option)
-			# 	if option.action:
-			# 		option.action.run(self)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
