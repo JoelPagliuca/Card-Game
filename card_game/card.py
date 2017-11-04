@@ -2,6 +2,7 @@
 All classes related to Cards
 """
 import random
+import json # FIXME probably gonna get imported everywhere
 
 import constants
 
@@ -10,13 +11,20 @@ __all__ = ["Card", "Deck", "Pile"]
 class Card(object):
 	"""
 	"""
-	def __init__(self, value, suit, action=None):
+	def __init__(self, value, suit):
 		self.value = value
 		self.suit = suit
-		self.action = action
+		self.actions = []	# needs to be an array because WILD will have 4 actions....
+		self.id = id(self)
 	
 	def __repr__(self):
 		return "Card {} - {}".format(self.value, self.suit)
+
+	def toDict(self):
+		"""
+		:rtype: dict
+		"""
+		return {"value": self.value, "suit": self.suit, "id": self.id}
 
 class Deck(object):
 	"""

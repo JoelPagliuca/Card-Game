@@ -5,6 +5,7 @@ import random
 
 import constants
 from card import Pile, Card
+from action import DrawCard
 from util import *
 
 __all__ = ["GameManager", "TextInterface"]
@@ -86,8 +87,8 @@ class GameManager(object):
 		options = []
 		for card in player.hand:
 			if self.rules.can_be_played(card, self._context):
-				options.append(card)
-		options.append(constants.CHOICE_DRAW_CARD)
+				options.extend(card.actions)
+		options.append(DrawCard(None))
 		return options
 
 	def display_status(self): #pragma: no cover
@@ -108,6 +109,13 @@ class GameManager(object):
 		update_method = getattr(observer, "update")
 		assert callable(update_method)
 		self._observers.append(observer)
+	
+	def deleteObserver(self, observer):
+		"""
+		remove observer from list
+		TODO: make this safer
+		"""
+		self._observers.remove(observer)
 	
 	def update_observers(self):
 		"""
@@ -134,20 +142,12 @@ class GameManager(object):
 			options = self.get_options(player)
 			# get option from player
 			Logger.debug("Asking "+player.name+" for choice", self.TAG)
-			choice = self.interface.get_choice(options, "Choose an action: ")
+			choice = self.interface.get_choice(options, "Choose an action: ", player)
 			# act on that option
 			Logger.debug("Got option \""+str(options[choice])+'"', self.TAG)
 			option = options[choice]
-			action_type = type(option) # FIXME: don't do this
-			if action_type is str:
-				Logger.debug("Going to draw another card", self.TAG)
-				player.take_card(self.deck.draw_card())
-			elif action_type is Card:
-				Logger.debug("Going to play a card")
-				player.hand.remove(option)
-				self.pile.play_card(option)
-				if option.action:
-					option.action.run(self)
+			Logger.debug("Running action "+str(option.__class__.__name__), self.TAG)
+			option.run(self)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
@@ -171,7 +171,7 @@ class TextInterface(object):
 		print msg
 	
 	@classmethod
-	def get_input(cls, prompt=None):
+	def get_input(cls, prompt=None, player=None):
 		"""
 		gets a string from the user
 		:type prompt: str
@@ -181,19 +181,19 @@ class TextInterface(object):
 		return raw_input(prompt)
 
 	@classmethod
-	def get_int(cls, prompt=None):
+	def get_int(cls, prompt=None, player=None):
 		output = None
 		while not output:
 			output = None
 			try:
-				output = int(cls.get_input(prompt))
+				output = int(cls.get_input(prompt, player))
 				Logger.debug("Got "+str(output), cls.TAG)
 			except ValueError:
 				Logger.debug("That was not an integer", cls.TAG)
 		return output
 	
 	@classmethod
-	def get_choice(cls, options, prompt=""):
+	def get_choice(cls, options, prompt="", player=None):
 		"""
 		get a choice from a user
 		user will see choices in 1 indexed form
@@ -203,8 +203,8 @@ class TextInterface(object):
 		:rtype: int
 		"""
 		for i in range(len(options)):
-			print "{}: {}".format(str(i+1), options[i])
+			cls.render("{}: {}".format(str(i+1), options[i]))
 		choice = -1
 		while not choice in range(len(options)):
-			choice = cls.get_int(prompt)-1
+			choice = cls.get_int(prompt, player)-1
 		return choice

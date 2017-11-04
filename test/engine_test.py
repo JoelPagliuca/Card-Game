@@ -5,6 +5,7 @@ from mock import patch, MagicMock, ANY
 from base_test import CGTestCase
 
 from card_game import constants
+from card_game import action
 
 class EngineTests(CGTestCase):
 	
@@ -44,7 +45,7 @@ class EngineTests(CGTestCase):
 	
 	def test_get_options(self):
 		opts = self.gm.get_options(self.player1)
-		self.assertEqual(opts[0], constants.CHOICE_DRAW_CARD) # only option with no cards should be DRAW CARD
+		self.assertIsInstance(opts[0], action.DrawCard)
 		self.gm.who_shuffled()
 		opts = self.gm.get_options(self.player1)
 		self.assertEqual(len(opts), self.gm.rules.CARDS_TO_DEAL+1) # now 1 option per card + draw card

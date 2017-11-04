@@ -5,3 +5,5 @@
 * lots of Python plugins read from that `setup.cfg` file
 * having two separate folders with Python code sucks
 * defining a variable that points to the `venv/python` is real good
+* had issues running `shallow` with create-react-app
+	* https://github.com/facebookincubator/create-react-app/issues/3206

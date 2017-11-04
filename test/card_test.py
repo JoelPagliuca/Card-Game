@@ -32,3 +32,9 @@ class CardTests(CGTestCase):
 			self.assertFalse(self.deck.need_to_shuffle())
 			self.deck.draw_card()
 		self.assertTrue(self.deck.need_to_shuffle())
+	
+	def test_to_dict(self):
+		d = self.card1.toDict()
+		self.assertEqual(d['value'], self.card1.value)
+		self.assertEqual(d['suit'], self.card1.suit)
+		self.assertEqual(d['id'], self.card1.id)

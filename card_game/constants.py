@@ -1,3 +1,8 @@
+"""
+Game-wide variables,
+Every card value and number we'll be needing,
+Keys for the game context
+"""
 DEBUG = False
 DEFAULT_TAG = "GAME"
 
@@ -11,9 +16,6 @@ class CONTEXT():
 	PLAYER_CARDS_PLAYED = "PLAYER_CARDS_PLAYED"
 	CURRENT_ACTION = "ACTIVE_ACTION"
 	CURRENT_PLAYER = "CURRENT_PLAYER"
-
-# Text input choices
-CHOICE_DRAW_CARD = "draw a card"
 
 # Card values
 CARD_ZERO = 0
