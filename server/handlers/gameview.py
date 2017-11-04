@@ -17,6 +17,7 @@ from card_game.data.decks import GET_UNO_DECK as GET_DECK
 
 __all__ = ["GameViewHandler"]
 
+MAX_PLAYERS = 2
 PLAYERS = []
 
 GAME_MANAGER = None # the game manager for everything
@@ -28,6 +29,7 @@ def start_game():
 	background a game instance
 	connect all the clients to the game
 	"""
+	global GAME_MANAGER
 	GAME_MANAGER = GameManager(PLAYERS, GET_DECK(), RULES)
 	GAME_MANAGER.interface = WebSocketInterface
 	for _, client in CLIENTS.items():
@@ -36,6 +38,17 @@ def start_game():
 	game_thread = threading.Thread(target=GAME_MANAGER.run)
 	game_thread.start()
 
+def stop_game():
+	global PLAYERS, GAME_MANAGER
+	logging.info("Stopping game")
+	# remove all players, close their connections, kill the game
+	PLAYERS[:] = []
+	for player in CLIENTS:
+		GAME_MANAGER.deleteObserver(CLIENTS[player])
+		CLIENTS[player].close()
+	CLIENTS.clear()
+	GAME_MANAGER = None
+
 class GameViewHandler(BaseHandler):
 	"""
 	communicates with the clients and game instance
@@ -43,8 +56,12 @@ class GameViewHandler(BaseHandler):
 	
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
+		global GAME_MANAGER, PLAYERS
 		self.player = Player("Player") # TODO https://github.com/treyhunner/names
 		self.client_id = self.player.id
+		# stop the webserver crashing when there's too many players
+		if len(PLAYERS) == MAX_PLAYERS:
+			stop_game()
 		PLAYERS.append(self.player)
 		CLIENTS[self.player] = self
 		self.input = None
@@ -73,13 +90,10 @@ class GameViewHandler(BaseHandler):
 	def on_close(self):
 		"""
 		stop the running game
-		# FIXME take this client off the update list
 		"""
-		global GAME_MANAGER
-		try:	
-			GAME_MANAGER.running = False
-			GAME_MANAGER = None
-			logging.info(self.client_id+" disconnect. Game ended")
+		try:
+			logging.info(self.client_id+" disconnect. Ending game")
+			stop_game()
 		except:
 			pass
 	

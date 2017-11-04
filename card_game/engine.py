@@ -110,6 +110,13 @@ class GameManager(object):
 		assert callable(update_method)
 		self._observers.append(observer)
 	
+	def deleteObserver(self, observer):
+		"""
+		remove observer from list
+		TODO: make this safer
+		"""
+		self._observers.remove(observer)
+	
 	def update_observers(self):
 		"""
 		give all the observers the updated game state
