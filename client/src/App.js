@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import {Layer, Rect, Text, Stage} from 'react-konva';
@@ -35,7 +34,7 @@ class Card extends Component {
           cornerRadius={2}
         />
         <Text
-          text={this.props.text}
+          text={this.props.text.charAt(0)}
           fontSize={80}
           fill={'#111'}
           width={CONSTANTS.CARD_WIDTH}
@@ -88,7 +87,7 @@ export class GameSocketComponent extends Component {
 
   render() {
     return (
-      <div/>
+      <div id="game_socket"/>
     ); 
   }
 }
@@ -115,31 +114,42 @@ class Game extends Component {
   }
 
   render() {
+    let top_card_render = null;
+    if (!(Object.keys(this.state.top_card).length === 0)) {
+      top_card_render =
+        <div id="top_card">
+          <h2>Top Card</h2>
+          <Stage className="Top-card" width={250} height={200}>
+            <Card 
+              text={this.state.top_card.value.toString()} 
+              suit={SUITS[this.state.top_card.suit]} 
+              x={10}
+              y={10}
+            />
+          </Stage>
+        </div>
+    }
+    const cards = this.state.hand.map((card, index) => 
+      <Card 
+        key={card.id} 
+        text={card.value.toString()} 
+        suit={SUITS[card.suit]} 
+        x={10+(index*(CONSTANTS.CARD_WIDTH+10))}
+        y={10}
+      />
+    );
     return (
       <div>
         <GameSocketComponent
           updateUI={this.handleUpdateUI.bind(this)}
         />
-        <h2>Your hand</h2>
-        <Stage className="Player-hand" width={1000} height={200}>
-          { this.state.hand.map((card, index) => {
-            return new Card({
-              text: card.value.toString(), 
-              suit: SUITS[card.suit], 
-              x: 10+(index*(CONSTANTS.CARD_WIDTH+10)),
-              y: 10
-            }).render();
-          }) }
-        </Stage>
-        <h2>Top Card</h2>
-        <Stage className="Top-card" width={250} height={200}>
-          { new Card({
-            text: this.state.top_card.value.toString(),
-            suit: SUITS[this.state.top_card.suit],
-            x: 10,
-            y: 10
-          }).render() }
-        </Stage>
+        <div id="player_hand">
+          <h2>Your hand</h2>
+          <Stage className="Player-hand" width={1000} height={200}>
+            {cards}
+          </Stage>
+        </div>
+        {top_card_render}
       </div>
     );
   };
@@ -149,10 +159,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
         <Game />
       </div>
     );
