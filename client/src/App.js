@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 export const CONSTANTS = {
   WEBSOCKET: "ws://"+window.location.host+"/websocket/gameview",
   CARD_WIDTH: 100,
+  CARD_HEIGHT: 150,
   ACTIONS: {
     UPDATE: "UPDATE",
     OPTION: "OPTION"
@@ -27,7 +28,7 @@ class Card extends Component {
       <Layer x={this.props.x} y={this.props.y}>
         <Rect
           width={CONSTANTS.CARD_WIDTH}
-          height={150}
+          height={CONSTANTS.CARD_HEIGHT}
           fill={this.props.suit}
           stroke={'#111'}
           strokeWidth={2}
