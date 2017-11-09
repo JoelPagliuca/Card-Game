@@ -9,6 +9,7 @@ class Action(object):
 	TAG = "ACTION"
 	def __init__(self, card):
 		self.card = card
+		self.id = id(self)
 	"""
 	Base class
 	TODO: abs
