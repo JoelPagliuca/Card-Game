@@ -148,7 +148,7 @@ class WebSocketInterface(TextInterface):
 		:param options: list of descriptions to present to the user
 		:type options: list
 		:return: the item chosen from the list (0 index)
-		:rtype: int
+		:rtype: Action
 		"""
 		data = {}
 		client = CLIENTS[player]
