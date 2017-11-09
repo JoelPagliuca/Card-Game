@@ -25,8 +25,8 @@ class Card extends Component {
 
   render() {
     return (
-      <span id={this.props.key} display="inline">
-        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10} display="inline-block" container={this.props.key}>
+      <span display="inline-block">
+        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10} display="inline-block" container={this.props.id}>
           <Layer x={5} y={5}>
             <Rect
               width={CONSTANTS.CARD_WIDTH}
@@ -52,15 +52,11 @@ class Card extends Component {
 }
 Card.propTypes = {
   text: PropTypes.string,
-  suit: PropTypes.string,
-  x: PropTypes.number,
-  y: PropTypes.number
+  suit: PropTypes.string
 };
-Card.defaultProps = { 
+Card.defaultProps = {
   text: '0', 
-  suit: SUITS.YELLOW,
-  x: 10,
-  y: 10
+  suit: SUITS.YELLOW
 };
 
 // FIXME: enough of this export shit
@@ -68,6 +64,7 @@ export class GameSocketComponent extends Component {
   constructor(props) {
     super(props);
     const gameSocket = new WebSocket(CONSTANTS.WEBSOCKET);
+    this.gameSocket = gameSocket;
     gameSocket.onmessage = (event) => {
       this.handleServerMessage(JSON.parse(event.data));
     };
@@ -78,16 +75,20 @@ export class GameSocketComponent extends Component {
     let action = data.action;
     delete data.action;
     switch (action) {
-      case "UPDATE":
+      case CONSTANTS.ACTIONS.UPDATE:
         this.props.updateUI(data)
         break;
       case CONSTANTS.ACTIONS.OPTION:
-        console.log("OPTIONS");
+        this.props.displayTurn(data)
         break;
       default:
         console.log("action was not an expected value");
         break;
     }
+  }
+
+  sendMessage(data) {
+    this.gameSocket.send(JSON.stringify(data));
   }
 
   render() {
@@ -107,8 +108,13 @@ class Game extends Component {
     super(props);
     this.state = {
       hand: [],
-      top_card: {}
+      top_card: {},
+      card_actions: {}, // card.id -> action
     }
+    this.gameSocketComponent = new GameSocketComponent({
+      updateUI:this.handleUpdateUI.bind(this),
+      displayTurn:this.handlePlayerTurn.bind(this)
+    })
   };
 
   handleUpdateUI(data) {
@@ -116,6 +122,25 @@ class Game extends Component {
       hand: data.hand,
       top_card: data.top_card
     });
+  }
+
+  handlePlayerTurn(data) {
+    // data is object 1:action, 2:action etc..
+    var actions = {};
+    var numOptions = Object.keys(data).length;
+    for (var i=0; i<numOptions; i++) {
+      if (data[i].action !== "DRAW") {
+        actions[data[i].card.id] = data[i];
+        actions[data[i].card.id].input = i;
+      }
+    }
+    this.setState({
+      card_actions: actions
+    });
+  }
+
+  handlePlayCard(card_id) {
+    this.gameSocketComponent.sendMessage({"input":this.state.card_actions[card_id].input.toString()});
   }
 
   render() {
@@ -126,26 +151,27 @@ class Game extends Component {
           <h2>Top Card</h2>
           <Card 
             text={this.state.top_card.value.toString()} 
-            suit={SUITS[this.state.top_card.suit]} 
-            x={10}
-            y={10}
+            suit={SUITS[this.state.top_card.suit]}
           />
         </div>
     }
     const cards = this.state.hand.map((card, index) => 
-      <Card 
-        key={card.id} 
-        text={card.value.toString()} 
-        suit={SUITS[card.suit]} 
-        x={10+(index*(CONSTANTS.CARD_WIDTH+10))}
-        y={10}
-      />
+      <span display="inline-block" key={card.id}>
+        <Card 
+          key={card.id} 
+          text={card.value.toString()} 
+          suit={SUITS[card.suit]}
+        />
+        {this.state.card_actions[card.id] && 
+          <button href="#" onClick={this.handlePlayCard.bind(this, card.id)}>
+            Play Card
+          </button>
+        }
+      </span>
     );
     return (
       <div>
-        <GameSocketComponent
-          updateUI={this.handleUpdateUI.bind(this)}
-        />
+        {this.gameSocketComponent.render()}
         <div id="player_hand">
           <h2>Your hand</h2>
           <div className="container">
