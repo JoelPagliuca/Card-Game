@@ -153,7 +153,7 @@ class WebSocketInterface(TextInterface):
 		data = {}
 		client = CLIENTS[player]
 		for i in range(len(options)):
-			data[i+1] = str(options[i])
+			data[i+1] = options[i].toDict()
 		data.update({"action": ACTION.OPTION})
 		client.write_message(data)
 		choice = -1
