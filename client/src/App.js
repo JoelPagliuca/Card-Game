@@ -25,24 +25,26 @@ class Card extends Component {
 
   render() {
     return (
-      <Layer x={this.props.x} y={this.props.y}>
-        <Rect
-          width={CONSTANTS.CARD_WIDTH}
-          height={CONSTANTS.CARD_HEIGHT}
-          fill={this.props.suit}
-          stroke={'#111'}
-          strokeWidth={2}
-          cornerRadius={2}
-        />
-        <Text
-          text={this.props.text.charAt(0)}
-          fontSize={80}
-          fill={'#111'}
-          width={CONSTANTS.CARD_WIDTH}
-          padding={20}
-          align={'center'}
-        />
-      </Layer>
+      <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10}>
+        <Layer x={5} y={5}>
+          <Rect
+            width={CONSTANTS.CARD_WIDTH}
+            height={CONSTANTS.CARD_HEIGHT}
+            fill={this.props.suit}
+            stroke={'#111'}
+            strokeWidth={2}
+            cornerRadius={2}
+          />
+          <Text
+            text={this.props.text.charAt(0)}
+            fontSize={80}
+            fill={'#111'}
+            width={CONSTANTS.CARD_WIDTH}
+            padding={20}
+            align={'center'}
+          />
+        </Layer>
+      </Stage>
     )
   }
 }
@@ -120,24 +122,24 @@ class Game extends Component {
       top_card_render =
         <div id="top_card">
           <h2>Top Card</h2>
-          <Stage className="Top-card" width={250} height={200}>
-            <Card 
-              text={this.state.top_card.value.toString()} 
-              suit={SUITS[this.state.top_card.suit]} 
-              x={10}
-              y={10}
-            />
-          </Stage>
+          <Card 
+            text={this.state.top_card.value.toString()} 
+            suit={SUITS[this.state.top_card.suit]} 
+            x={10}
+            y={10}
+          />
         </div>
     }
     const cards = this.state.hand.map((card, index) => 
-      <Card 
-        key={card.id} 
-        text={card.value.toString()} 
-        suit={SUITS[card.suit]} 
-        x={10+(index*(CONSTANTS.CARD_WIDTH+10))}
-        y={10}
-      />
+      <span>
+        <Card 
+          key={card.id} 
+          text={card.value.toString()} 
+          suit={SUITS[card.suit]} 
+          x={10+(index*(CONSTANTS.CARD_WIDTH+10))}
+          y={10}
+        />
+      </span>
     );
     return (
       <div>
@@ -146,9 +148,11 @@ class Game extends Component {
         />
         <div id="player_hand">
           <h2>Your hand</h2>
-          <Stage className="Player-hand" width={1000} height={200}>
-            {cards}
-          </Stage>
+          <div className="container">
+            <div className="row">
+              {cards}
+            </div>
+          </div>
         </div>
         {top_card_render}
       </div>
