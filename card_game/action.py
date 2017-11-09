@@ -25,7 +25,10 @@ class Action(object):
 		Convert to JSON string
 		:rtype: dict
 		"""
-		return {"action": self.TAG, card: self.card.toDict()}
+		output = { "action": self.TAG }
+		if self.card:
+			output["card"] = self.card.toDict()
+		return output
 
 class PlayCard(Action):
 	TAG = "PLAY"
