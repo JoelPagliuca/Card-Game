@@ -25,26 +25,28 @@ class Card extends Component {
 
   render() {
     return (
-      <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10}>
-        <Layer x={5} y={5}>
-          <Rect
-            width={CONSTANTS.CARD_WIDTH}
-            height={CONSTANTS.CARD_HEIGHT}
-            fill={this.props.suit}
-            stroke={'#111'}
-            strokeWidth={2}
-            cornerRadius={2}
-          />
-          <Text
-            text={this.props.text.charAt(0)}
-            fontSize={80}
-            fill={'#111'}
-            width={CONSTANTS.CARD_WIDTH}
-            padding={20}
-            align={'center'}
-          />
-        </Layer>
-      </Stage>
+      <span id={this.props.key} display="inline">
+        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10} display="inline-block" container={this.props.key}>
+          <Layer x={5} y={5}>
+            <Rect
+              width={CONSTANTS.CARD_WIDTH}
+              height={CONSTANTS.CARD_HEIGHT}
+              fill={this.props.suit}
+              stroke={'#111'}
+              strokeWidth={2}
+              cornerRadius={2}
+            />
+            <Text
+              text={this.props.text.charAt(0)}
+              fontSize={80}
+              fill={'#111'}
+              width={CONSTANTS.CARD_WIDTH}
+              padding={20}
+              align={'center'}
+            />
+          </Layer>
+        </Stage>
+      </span>
     )
   }
 }
@@ -131,15 +133,13 @@ class Game extends Component {
         </div>
     }
     const cards = this.state.hand.map((card, index) => 
-      <span>
-        <Card 
-          key={card.id} 
-          text={card.value.toString()} 
-          suit={SUITS[card.suit]} 
-          x={10+(index*(CONSTANTS.CARD_WIDTH+10))}
-          y={10}
-        />
-      </span>
+      <Card 
+        key={card.id} 
+        text={card.value.toString()} 
+        suit={SUITS[card.suit]} 
+        x={10+(index*(CONSTANTS.CARD_WIDTH+10))}
+        y={10}
+      />
     );
     return (
       <div>
@@ -149,9 +149,7 @@ class Game extends Component {
         <div id="player_hand">
           <h2>Your hand</h2>
           <div className="container">
-            <div className="row">
-              {cards}
-            </div>
+            {cards}
           </div>
         </div>
         {top_card_render}
