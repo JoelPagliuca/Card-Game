@@ -150,18 +150,22 @@ class WebSocketInterface(TextInterface):
 		:return: the item chosen from the list
 		:rtype: Action
 		"""
-		data = {}		# this will be {action.id:action}
+		actions = {}		# this will be {action.id:action}
+		data = {}
 		client = CLIENTS[player]
 		for action in options:
-			pass
-		for i in range(len(options)):
-			data[i] = options[i].toDict()
+			actions[action.id] = action.toDict()
 		data.update({"action": ACTION.OPTION})
+		data.update(actions)
 		client.write_message(data)
 		choice = -1
-		while not choice in range(len(options)):
+		while not choice in actions.keys():
 			choice = cls.get_input(prompt, player)
-		return choice
+			# find the choice mapping to this id
+			for o in options:
+				if o.id == choice:
+					return o
+			continue
 
 class ACTION():
 	"""
