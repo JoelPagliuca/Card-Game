@@ -26,7 +26,7 @@ class Card extends Component {
   render() {
     return (
       <span display="inline-block">
-        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10} display="inline-block" container={this.props.id}>
+        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10} display="inline-block" >
           <Layer x={5} y={5}>
             <Rect
               width={CONSTANTS.CARD_WIDTH}
@@ -125,15 +125,15 @@ class Game extends Component {
   }
 
   handlePlayerTurn(data) {
-    // data is object 1:action, 2:action etc..
+    // data is object id:action, id:action etc..
     var actions = {};
-    var numOptions = Object.keys(data).length;
-    for (var i=0; i<numOptions; i++) {
-      if (data[i].action !== "DRAW") {
-        actions[data[i].card.id] = data[i];
-        actions[data[i].card.id].input = i;
+    Object.keys(data).forEach((key) => {
+      let act = data[key];
+      if (act.action !== "DRAW") {
+        actions[act.card.id] = act;
+        actions[act.card.id].input = act.id;
       }
-    }
+    });
     this.setState({
       card_actions: actions
     });
