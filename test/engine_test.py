@@ -104,4 +104,4 @@ class TextInterfaceTests(CGTestCase):
 	def test_get_choice_sad(self, mock):
 		options = ["zero", "one", "two (option 3)"]
 		value = self.ti.get_choice(options)
-		self.assertEqual(value, 2)
+		self.assertEqual(value, options[2])

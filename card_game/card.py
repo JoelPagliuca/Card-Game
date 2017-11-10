@@ -15,7 +15,7 @@ class Card(object):
 		self.value = value
 		self.suit = suit
 		self.actions = []	# needs to be an array because WILD will have 4 actions....
-		self.id = id(self)
+		self.id = str(id(self))
 	
 	def __repr__(self):
 		return "Card {} - {}".format(self.value, self.suit)

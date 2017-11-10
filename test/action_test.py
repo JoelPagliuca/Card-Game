@@ -29,3 +29,9 @@ class ReverseTest(CGTestCase):
 		rev = Reverse(self.card1)
 		rev.run(self.gm)
 		change_direction_mock.assert_called_once()
+	
+	def test_id_generation(self):
+		rev1 = Reverse(self.card1)
+		self.assertIsNotNone(rev1.id)
+		rev2 = Reverse(self.card1)
+		self.assertNotEqual(rev1.id, rev2.id)

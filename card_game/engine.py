@@ -144,10 +144,9 @@ class GameManager(object):
 			Logger.debug("Asking "+player.name+" for choice", self.TAG)
 			choice = self.interface.get_choice(options, "Choose an action: ", player)
 			# act on that option
-			Logger.debug("Got option \""+str(options[choice])+'"', self.TAG)
-			option = options[choice]
-			Logger.debug("Running action "+str(option.__class__.__name__), self.TAG)
-			option.run(self)
+			Logger.debug("Got option \""+str(choice)+'"', self.TAG)
+			Logger.debug("Running action "+str(choice.__class__.__name__), self.TAG)
+			choice.run(self)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
 			if winner:
@@ -199,12 +198,12 @@ class TextInterface(object):
 		user will see choices in 1 indexed form
 		:param options: list of descriptions to present to the user
 		:type options: list
-		:return: the item chosen from the list (0 index)
-		:rtype: int
+		:return: the item chosen from the list
+		:rtype: Action
 		"""
 		for i in range(len(options)):
 			cls.render("{}: {}".format(str(i+1), options[i]))
 		choice = -1
 		while not choice in range(len(options)):
 			choice = cls.get_int(prompt, player)-1
-		return choice
+		return options[choice]

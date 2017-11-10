@@ -144,22 +144,28 @@ class WebSocketInterface(TextInterface):
 	def get_choice(cls, options, prompt="", player=None):
 		"""
 		get a choice from a user
-		user will see choices in 1 indexed form
+		expecting '{"input": "action.id"}' from the user
 		:param options: list of descriptions to present to the user
 		:type options: list
-		:return: the item chosen from the list (0 index)
-		:rtype: int
+		:return: the item chosen from the list
+		:rtype: Action
 		"""
+		actions = {}		# this will be {action.id:action}
 		data = {}
 		client = CLIENTS[player]
-		for i in range(len(options)):
-			data[i+1] = options[i].toDict()
+		for action in options:
+			actions[action.id] = action.toDict()
 		data.update({"action": ACTION.OPTION})
+		data.update(actions)
 		client.write_message(data)
 		choice = -1
-		while not choice in range(len(options)):
-			choice = cls.get_int(prompt, player)-1
-		return choice
+		while not choice in actions.keys():
+			choice = cls.get_input(prompt, player)
+			# find the choice mapping to this id
+			for o in options:
+				if o.id == choice:
+					return o
+			continue
 
 class ACTION():
 	"""
