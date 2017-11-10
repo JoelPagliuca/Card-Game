@@ -9,7 +9,7 @@ class Action(object):
 	TAG = "ACTION"
 	def __init__(self, card):
 		self.card = card
-		self.id = id(self)
+		self.id = str(id(self))
 	"""
 	Base class
 	TODO: abs
@@ -26,7 +26,7 @@ class Action(object):
 		Convert to JSON string
 		:rtype: dict
 		"""
-		output = { "action": self.TAG }
+		output = { "action": self.TAG, "id": self.id }
 		if self.card:
 			output["card"] = self.card.toDict()
 		return output
