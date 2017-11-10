@@ -18,7 +18,8 @@ const SUITS = {
   YELLOW: '#FC0',
   BLUE: '#05F',
   RED: '#F00',
-  PURPLE: '#F0C'
+  PURPLE: '#F0C',
+  BLACK: '#333'
 };
 
 class Card extends Component {
@@ -131,7 +132,8 @@ class Game extends Component {
       let act = data[key];
       if (act.action !== "DRAW") {
         actions[act.card.id] = act;
-        actions[act.card.id].input = act.id;
+      } else {
+        this.setState({"drawCardAction": act});
       }
     });
     this.setState({
@@ -140,7 +142,17 @@ class Game extends Component {
   }
 
   handlePlayCard(card_id) {
-    this.gameSocketComponent.sendMessage({"input":this.state.card_actions[card_id].input.toString()});
+    // get the action related to the card_id
+    this.sendInput(this.state.card_actions[card_id].id);
+  }
+
+  sendInput(value) {
+    // send the input to the server, get rid of all the available actions
+    this.gameSocketComponent.sendMessage({"input": value.toString()});
+    this.setState({
+      card_actions: {},
+      drawCardAction: {}
+    })
   }
 
   render() {
@@ -179,6 +191,17 @@ class Game extends Component {
           </div>
         </div>
         {top_card_render}
+        {this.state.drawCardAction && 
+          <div>
+            <Card 
+              text=""
+              suit={SUITS.BLACK}
+            />
+            <button href="#" onClick={this.sendInput.bind(this, this.state.drawCardAction.id)}>
+              Draw
+            </button>
+          </div>
+        }
       </div>
     );
   };
