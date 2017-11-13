@@ -62,6 +62,12 @@ class Deck(object):
 		"""
 		return len(self._cards) == 0
 
+	def num_cards(self):
+		"""
+		:rtype: int
+		"""
+		return len(self._cards)
+
 class Pile(object):
 	"""
 	Where you put cards

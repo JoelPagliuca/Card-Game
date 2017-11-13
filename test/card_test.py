@@ -16,6 +16,9 @@ class CardTests(CGTestCase):
 		self.deck.restock(self.pile.take_cards())
 		self.assertItemsEqual(self.deck._cards, self.cards)
 	
+	def test_num_cards(self):
+		self.assertEqual(self.deck.num_cards(), len(self.deck._cards))
+	
 	def test_pile(self):
 		self.pile.play_card(self.card1)
 		self.assertEqual(self.card1, self.pile.top_card())

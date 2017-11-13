@@ -54,11 +54,11 @@ class GameManager(object):
 	def who_shuffled(self):
 		"""
 		deal an appropriate amount of cards to each player
-		FIXME: make sure num_cards is a reasonable number
 		"""
-		num_cards = self.rules.cards_to_deal(self._context)
+		to_deal = self.rules.cards_to_deal(self._context)
+		assert self.deck.num_cards() > to_deal*len(self.players), "You tried to deal out too many cards"
 		for p in self.players:
-			for _ in range(num_cards):
+			for _ in range(to_deal):
 				p.take_card(self.deck.draw_card())
 	
 	def shuffle(self):
