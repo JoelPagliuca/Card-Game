@@ -2,8 +2,6 @@
 All classes related to Cards
 """
 import random
-import json # FIXME probably gonna get imported everywhere
-
 import constants
 
 __all__ = ["Card", "Deck", "Pile"]
