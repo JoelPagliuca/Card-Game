@@ -31,7 +31,7 @@ class GameManager(object):
 		self.pile = Pile()
 		self.rules = rules
 		self._context = {}
-		self.interface = TextInterface # FIXME do this better
+		self.interface = TextInterface
 		self.running = False
 		self._observers = []
 	
@@ -100,7 +100,6 @@ class GameManager(object):
 	def update_state(self):
 		self._context[constants.CONTEXT.TOP_CARD] = self.pile.top_card()
 		self._context[constants.CONTEXT.CURRENT_PLAYER] = self.current_player()
-		self._context[constants.CONTEXT.PLAYERS] = self.players
 	
 	def observe(self, observer):
 		"""
@@ -114,9 +113,9 @@ class GameManager(object):
 	def deleteObserver(self, observer):
 		"""
 		remove observer from list
-		TODO: make this safer
 		"""
-		self._observers.remove(observer)
+		if observer in self._observers:
+			self._observers.remove(observer)
 	
 	def update_observers(self):
 		"""
@@ -135,7 +134,6 @@ class GameManager(object):
 		self._preRun()
 		while self.running:
 			self.update_state()
-			self.display_status() # FIXME: remove and make into another observer
 			self.update_observers()
 			# get current player
 			player = self.current_player()
@@ -158,7 +156,6 @@ class GameManager(object):
 			if self.deck.need_to_shuffle():
 				Logger.debug("shuffling", self.TAG)
 				self.shuffle()
-			self.interface.render("")
 		Logger.debug("Game ended")
 		return self._context
 

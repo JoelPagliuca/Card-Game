@@ -7,6 +7,8 @@ import threading
 import uuid
 import time
 
+import names
+
 from base import BaseHandler
 
 from card_game import constants
@@ -57,8 +59,8 @@ class GameViewHandler(BaseHandler):
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
 		global GAME_MANAGER, PLAYERS
-		self.player = Player("Player") # TODO https://github.com/treyhunner/names
-		self.client_id = self.player.id
+		self.player = Player(names.get_full_name()) # TODO https://github.com/treyhunner/names
+		self.client_id = self.player.secret
 		# stop the webserver crashing when there's too many players
 		if len(PLAYERS) == MAX_PLAYERS:
 			stop_game()
