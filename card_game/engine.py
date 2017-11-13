@@ -100,6 +100,7 @@ class GameManager(object):
 	def update_state(self):
 		self._context[constants.CONTEXT.TOP_CARD] = self.pile.top_card()
 		self._context[constants.CONTEXT.CURRENT_PLAYER] = self.current_player()
+		self._context[constants.CONTEXT.PLAYERS] = self.players
 	
 	def observe(self, observer):
 		"""
