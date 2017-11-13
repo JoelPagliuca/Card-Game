@@ -73,6 +73,8 @@ class EngineTests(CGTestCase):
 		dummy = MagicMock() # will have .update function ;)
 		self.gm.observe(dummy)
 		self.assertListEqual(self.gm._observers, [dummy])
+		self.gm.deleteObserver(dummy)
+		self.assertListEqual(self.gm._observers, [])
 	
 	def test_observe_contract(self):
 		# make sure we have a tantrum if the observer cannot observe

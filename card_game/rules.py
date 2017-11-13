@@ -76,3 +76,4 @@ class MelbourneRules(SimpleRules):
 				return True
 		else:
 			return True
+		return False

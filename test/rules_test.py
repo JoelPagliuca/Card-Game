@@ -33,3 +33,9 @@ class MelbourneRulesTests(CGTestCase):
 		ctx = {constants.CONTEXT.TOP_CARD: Card(constants.CARD_ONE, constants.CARD_BLUE)}
 		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_ONE, constants.CARD_RED), ctx))
 		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_BLUE), ctx))
+		self.assertFalse(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_RED), ctx))
+	
+	def test_can_be_played_first_card(self):
+		ctx = {constants.CONTEXT.TOP_CARD: None}
+		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_ONE, constants.CARD_RED), ctx))
+		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_BLUE), ctx))
