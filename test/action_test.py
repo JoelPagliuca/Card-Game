@@ -13,6 +13,14 @@ class PlayCardTest(CGTestCase):
 		act = PlayCard(card)
 		act.run(self.gm)
 		self.assertEqual(card, self.gm.pile.top_card())
+	
+	def test_to_dict(self):
+		card = self.card1
+		act = PlayCard(card)
+		d = act.toDict()
+		self.assertTrue(d.has_key("action"))
+		self.assertTrue(d.has_key("card"))
+		self.assertEqual(card.id, d["card"]["id"])
 
 class DrawCardTest(CGTestCase):
 	def test_draw_card(self):
@@ -21,6 +29,11 @@ class DrawCardTest(CGTestCase):
 		act = DrawCard(None)
 		act.run(self.gm)
 		self.assertEqual(len(player.hand)-1, num_cards)
+	
+	def test_to_dict(self):
+		act = DrawCard(None)
+		d = act.toDict()
+		self.assertFalse(d.has_key("card"))
 
 class ReverseTest(CGTestCase):
 	@patch('card_game.engine.GameManager.change_direction')

@@ -25,7 +25,7 @@ class Player(object):
 		"""
 		self.hand.append(card)
 	
-	def is_human(self):
+	def is_human(self): # pragma: no cover
 		return self._human
 
 	def toDict(self, censored=True):
@@ -40,5 +40,5 @@ class Player(object):
 			data["hand"] = map(lambda c:c.toDict(), self.hand)
 			return data
 
-	def __hash__(self):
+	def __hash__(self): # pragma: no cover
 		return hash(self.id)
