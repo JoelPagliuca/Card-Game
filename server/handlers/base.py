@@ -10,6 +10,6 @@ class BaseHandler(websocket.WebSocketHandler):
 	"""
 	def check_origin(self, origin):
 		"""
-		FIXME don't let every origin maybe
+		TODO don't let every origin maybe
 		"""
 		return True
