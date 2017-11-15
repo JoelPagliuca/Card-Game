@@ -2,8 +2,6 @@
 All classes related to Cards
 """
 import random
-import json # FIXME probably gonna get imported everywhere
-
 import constants
 
 __all__ = ["Card", "Deck", "Pile"]
@@ -63,6 +61,12 @@ class Deck(object):
 		:rtype: bool
 		"""
 		return len(self._cards) == 0
+
+	def num_cards(self):
+		"""
+		:rtype: int
+		"""
+		return len(self._cards)
 
 class Pile(object):
 	"""

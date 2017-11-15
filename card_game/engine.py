@@ -31,7 +31,7 @@ class GameManager(object):
 		self.pile = Pile()
 		self.rules = rules
 		self._context = {}
-		self.interface = TextInterface # FIXME do this better
+		self.interface = TextInterface
 		self.running = False
 		self._observers = []
 	
@@ -54,11 +54,11 @@ class GameManager(object):
 	def who_shuffled(self):
 		"""
 		deal an appropriate amount of cards to each player
-		FIXME: make sure num_cards is a reasonable number
 		"""
-		num_cards = self.rules.cards_to_deal(self._context)
+		to_deal = self.rules.cards_to_deal(self._context)
+		assert self.deck.num_cards() > to_deal*len(self.players), "You tried to deal out too many cards"
 		for p in self.players:
-			for _ in range(num_cards):
+			for _ in range(to_deal):
 				p.take_card(self.deck.draw_card())
 	
 	def shuffle(self):
@@ -113,9 +113,9 @@ class GameManager(object):
 	def deleteObserver(self, observer):
 		"""
 		remove observer from list
-		TODO: make this safer
 		"""
-		self._observers.remove(observer)
+		if observer in self._observers:
+			self._observers.remove(observer)
 	
 	def update_observers(self):
 		"""
@@ -134,7 +134,6 @@ class GameManager(object):
 		self._preRun()
 		while self.running:
 			self.update_state()
-			self.display_status() # FIXME: remove and make into another observer
 			self.update_observers()
 			# get current player
 			player = self.current_player()
@@ -157,7 +156,6 @@ class GameManager(object):
 			if self.deck.need_to_shuffle():
 				Logger.debug("shuffling", self.TAG)
 				self.shuffle()
-			self.interface.render("")
 		Logger.debug("Game ended")
 		return self._context
 

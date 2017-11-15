@@ -1,24 +1,27 @@
 """
 Rule sets for the game
 """
+from abc import ABCMeta, abstractmethod
+
 import constants
-from util import Logger
+from util import Logger, abstractclassmethod
 
 __all__ = ["SimpleRules", "MelbourneRules"]
 
 class Rules(object):
 	"""
 	Implements the game rules
-	ABSTRACT TODO: use abc package
 	"""
-	@classmethod
+	__metaclass__ = ABCMeta
+
+	@abstractclassmethod
 	def can_be_played(cls, card, context={}):
 		"""
 		:rtype: bool
 		"""
 		raise NotImplementedError()
 	
-	@classmethod
+	@abstractclassmethod
 	def check_for_win(cls, context={}):
 		"""
 		checks to see if the game has been won yet
@@ -26,7 +29,7 @@ class Rules(object):
 		"""
 		raise NotImplementedError()
 	
-	@classmethod
+	@abstractclassmethod
 	def cards_to_deal(cls, context={}):
 		"""
 		figure out how many cards to deal out
@@ -76,3 +79,4 @@ class MelbourneRules(SimpleRules):
 				return True
 		else:
 			return True
+		return False

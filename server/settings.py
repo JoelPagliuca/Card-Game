@@ -1,5 +1,8 @@
 """
 Server config
+Environment variables
+	DEPLOYMENT_TYPE
+	SERVER_COOKIE_SECRET
 """
 import os
 
@@ -32,7 +35,10 @@ else:
 # settings for the server
 settings = {}
 settings['debug'] = DEPLOYMENT != DeploymentType.PRODUCTION or options.debug
-settings['cookie_secret'] = "your-cookie-secret" # FIXME: read from environ
+if 'SERVER_COOKIE_SECRET' in os.environ:
+	settings['cookie_secret'] = os.environ['SERVER_COOKIE_SECRET']
+else:
+	settings['cookie_secret'] = "demo-cookie-secret"
 settings['xsrf_cookies'] = True
 
 

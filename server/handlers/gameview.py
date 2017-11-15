@@ -7,6 +7,8 @@ import threading
 import uuid
 import time
 
+import names
+
 from base import BaseHandler
 
 from card_game import constants
@@ -57,8 +59,8 @@ class GameViewHandler(BaseHandler):
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
 		global GAME_MANAGER, PLAYERS
-		self.player = Player("Player") # TODO https://github.com/treyhunner/names
-		self.client_id = self.player.id
+		self.player = Player(names.get_full_name()) # TODO https://github.com/treyhunner/names
+		self.client_id = self.player.secret
 		# stop the webserver crashing when there's too many players
 		if len(PLAYERS) == MAX_PLAYERS:
 			stop_game()
@@ -105,11 +107,12 @@ class GameViewHandler(BaseHandler):
 		logging.info("Update from the game")
 		current_player = data.get(constants.CONTEXT.CURRENT_PLAYER)
 		top_card = data.get(constants.CONTEXT.TOP_CARD)
-		# FIXME the json serializing here could be a bit cleaner
+		players = data.get(constants.CONTEXT.PLAYERS)
 		output = {
 			"action": ACTION.UPDATE,
-			"current_player": {k: current_player.__dict__[k] for k in ('name',)},
-			"hand": [self.player.hand[i].toDict() for i in range(len(self.player.hand))],
+			"current_player": current_player.toDict(),
+			"players": map(lambda p:p.toDict(), players),
+			"hand": map(lambda c:c.toDict(), self.player.hand),
 			"top_card": top_card.toDict(),
 		}
 		self.write_message(output)

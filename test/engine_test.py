@@ -6,6 +6,7 @@ from base_test import CGTestCase
 
 from card_game import constants
 from card_game import action
+from card_game.rules import SimpleRules
 
 class EngineTests(CGTestCase):
 	
@@ -72,6 +73,8 @@ class EngineTests(CGTestCase):
 		dummy = MagicMock() # will have .update function ;)
 		self.gm.observe(dummy)
 		self.assertListEqual(self.gm._observers, [dummy])
+		self.gm.deleteObserver(dummy)
+		self.assertListEqual(self.gm._observers, [])
 	
 	def test_observe_contract(self):
 		# make sure we have a tantrum if the observer cannot observe
@@ -80,6 +83,12 @@ class EngineTests(CGTestCase):
 		with self.assertRaises(Exception):
 			self.gm.observe(dummy)
 		self.assertListEqual(self.gm._observers, [])
+	
+	@patch.object(SimpleRules, 'cards_to_deal')
+	def test_who_shuffled_too_many_cards(self, mock):
+		mock.return_value = 50
+		with self.assertRaises(AssertionError):
+			self.gm.who_shuffled()
 	
 	def test_update_observers(self):
 		# check if the observers are updated

@@ -13,7 +13,8 @@ class Player(object):
 		"""
 		:type name: str
 		"""
-		self.id = str(uuid.uuid4())
+		self.id = str(id(self))
+		self.secret = str(uuid.uuid4())	# maybe could use this to verify whether we can see the hand?
 		self.name = name
 		self.hand = list()
 		self._human = is_human
@@ -24,8 +25,20 @@ class Player(object):
 		"""
 		self.hand.append(card)
 	
-	def is_human(self):
+	def is_human(self): # pragma: no cover
 		return self._human
 
-	def __hash__(self):
+	def toDict(self, censored=True):
+		"""
+		:param censored: not everyone needs to know the player id
+		:rtype: dict
+		"""
+		data = {"id": self.id, "name": self.name, "num_cards": len(self.hand)}
+		if censored:
+			return data
+		else:
+			data["hand"] = map(lambda c:c.toDict(), self.hand)
+			return data
+
+	def __hash__(self): # pragma: no cover
 		return hash(self.id)
