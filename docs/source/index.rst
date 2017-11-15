@@ -7,9 +7,10 @@ Welcome to Card Game's documentation!
 =====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
-
+   
+   card_game
 
 
 Indices and tables
