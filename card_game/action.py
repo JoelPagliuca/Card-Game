@@ -25,7 +25,7 @@ class Action(object):
 		"""
 		Convert to JSON string
 
-		:rtype: dict
+		:rtype: dict(str, str)
 		"""
 		output = { "action": self._TAG, "id": self.id }
 		if self.card:

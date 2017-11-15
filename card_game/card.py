@@ -23,7 +23,7 @@ class Card(object):
 
 	def toDict(self):
 		"""
-		:rtype: dict
+		:rtype: dict(str, str)
 		"""
 		return {"value": self.value, "suit": self.suit, "id": self.id}
 
@@ -34,7 +34,7 @@ class Deck(object):
 		side effect may shuffle the card list
 
 		:param str name:
-		:param list cards:
+		:param list(Card) cards:
 		"""
 		self.name = name
 		self._cards = []
@@ -97,7 +97,7 @@ class Pile(object):
 		"""
 		Clear the pile and return the cards
 		
-		:rtype: list
+		:rtype: list(Card)
 		"""
 		output = []
 		output.extend(self._cards)

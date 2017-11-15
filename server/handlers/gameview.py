@@ -149,7 +149,7 @@ class WebSocketInterface(TextInterface):
 		get a choice from a user
 		expecting '{"input": "action.id"}' from the user
 		:param options: list of descriptions to present to the user
-		:type options: list
+		:type options: list(:class:`card_game.action.Action`)
 		:return: the item chosen from the list
 		:rtype: Action
 		"""
