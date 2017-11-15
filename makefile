@@ -1,4 +1,4 @@
-.PHONY: help test clean install server demo
+.PHONY: help test clean install server demo configure
 
 PYTHON := venv/bin/python
 PIP := venv/bin/pip
@@ -24,7 +24,7 @@ install:	## install the requirements into the virtualenv
 install: server/requirements.txt
 	${PIP} install -r $<
 
-dev: environment install		##
+configure: environment install		##
 
 clean:		##
 	rm -f **/*.pyc
