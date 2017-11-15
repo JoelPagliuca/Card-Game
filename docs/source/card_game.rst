@@ -17,12 +17,10 @@ card
 .. automodule:: card_game.card
     :members:
     :undoc-members:
-    :show-inheritance:
-    :special-members:
+    :special-members: __init__
 
 constants
 ---------
 .. automodule:: card_game.constants
     :members:
     :undoc-members:
-    :show-inheritance:
