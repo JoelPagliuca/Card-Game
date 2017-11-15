@@ -4,6 +4,12 @@ from mock import patch
 
 from base_test import CGTestCase
 from card_game.action import *
+from card_game.action import Action
+
+class ActionTest(CGTestCase):
+	def test_init(self):
+		with self.assertRaises(Exception):
+			act = Action(self.card1)
 
 class PlayCardTest(CGTestCase):
 	def test_play_card(self):
