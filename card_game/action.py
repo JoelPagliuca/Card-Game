@@ -3,24 +3,21 @@ An effect on a card, this is how stuff like Reverse and Skip will be implemented
 All actions will be given pointers to the card and game_manager
 Assume that the current player is who played the card with the action
 """
+from abc import ABCMeta, abstractmethod
+
 __all__ = ["PlayCard", "DrawCard", "Reverse"]
 
 class Action(object):
+	"""
+	Base class for all actions
+	has a run and toDict methods
+	"""
+	__metaclass__ = ABCMeta
 	TAG = "ACTION"
 	def __init__(self, card):
 		self.card = card
 		self.id = str(id(self))
-	"""
-	Base class
-	TODO: abs
-	"""
-	def run(self, game_manager):
-		"""
-		Make the action happen
-		:type game_manager: GameManager
-		"""
-		raise NotImplementedError()
-
+	
 	def toDict(self):
 		"""
 		Convert to JSON string
@@ -30,6 +27,14 @@ class Action(object):
 		if self.card:
 			output["card"] = self.card.toDict()
 		return output
+	
+	@abstractmethod
+	def run(self, game_manager):
+		"""
+		Make the action happen
+		:type game_manager: GameManager
+		"""
+		raise NotImplementedError()
 
 class PlayCard(Action):
 	TAG = "PLAY"
