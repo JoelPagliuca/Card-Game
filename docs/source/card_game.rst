@@ -31,3 +31,10 @@ engine
     :members:
     :undoc-members:
     :special-members: __init__
+
+player
+--------------------
+.. automodule:: card_game.player
+    :members:
+    :undoc-members:
+    :special-members: __init__
