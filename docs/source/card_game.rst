@@ -46,3 +46,9 @@ rules
     :show-inheritance:
     :undoc-members:
     :special-members: __init__
+
+util
+--------------------
+.. automodule:: card_game.util
+    :members:
+    :undoc-members:
