@@ -59,7 +59,7 @@ class GameViewHandler(BaseHandler):
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
 		global GAME_MANAGER, PLAYERS
-		self.player = Player(names.get_full_name()) # TODO https://github.com/treyhunner/names
+		self.player = Player(names.get_full_name())
 		self.client_id = self.player.secret
 		# stop the webserver crashing when there's too many players
 		if len(PLAYERS) == MAX_PLAYERS:
@@ -149,7 +149,7 @@ class WebSocketInterface(TextInterface):
 		get a choice from a user
 		expecting '{"input": "action.id"}' from the user
 		:param options: list of descriptions to present to the user
-		:type options: list
+		:type options: list(:class:`card_game.action.Action`)
 		:return: the item chosen from the list
 		:rtype: Action
 		"""

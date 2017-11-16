@@ -1,13 +1,14 @@
 """
 Game-wide variables,
-Every card value and number we'll be needing,
-Keys for the game context
+every card value and number we'll be needing,
+keys for the game context
 """
 DEBUG = False
 DEFAULT_TAG = "GAME"
 
 # Game context keys
 class CONTEXT():
+	"""Keys we use in the :class:`GameManager` context dict"""
 	PLAYERS = "PLAYERS"
 	TOP_CARD = "TOP_CARD"
 	WINNER = "WINNER"
@@ -17,7 +18,7 @@ class CONTEXT():
 	CURRENT_ACTION = "ACTIVE_ACTION"
 	CURRENT_PLAYER = "CURRENT_PLAYER"
 
-# Card values
+# TODO constants.CARD.ZERO
 CARD_ZERO = 0
 CARD_ONE = 1
 CARD_TWO = 2
@@ -28,6 +29,7 @@ CARD_SIX = 6
 CARD_SEVEN = 7
 CARD_EIGHT = 8
 CARD_NINE = 9
+#: All the numeric values for the cards
 CARD_VALUES = [CARD_ZERO, CARD_ONE, CARD_TWO, CARD_THREE, CARD_FOUR, CARD_FIVE, CARD_SIX, CARD_SEVEN, CARD_EIGHT, CARD_NINE]
 # Card colors
 CARD_BLUE = "BLUE"

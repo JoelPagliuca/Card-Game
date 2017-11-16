@@ -11,17 +11,25 @@ from util import *
 __all__ = ["GameManager", "TextInterface"]
 
 class GameManager(object):
+	"""Runs the game and maintains game-state
+
+	:ivar list(Player) players: list of players in the game
+	:ivar Deck deck: deck being used in-game
+	:ivar Pile pile: pile of cards for the game
+	:ivar Rules rules: ruleset for the game
+	:ivar TextInterface interface: umm, probably can take this away TODO
+	:ivar bool running: is the game running?
 	"""
-	Runs the game
-	"""
-	TAG = "GAMEMANAGER"
+	_TAG = "GAMEMANAGER"
 
 	def __init__(self, players, deck, rules):
 		"""
-		TODO: describe all the properties, https://stackoverflow.com/questions/8649105/how-to-show-instance-attributes-in-sphinx-doc
-		:type players: list
-		:type deck: Deck
-		:type rules: Rules
+		:param players:
+		:type players: list(:class:`card_game.player.Player`)
+		:param deck:
+		:type deck: :class:`card_game.card.Deck`
+		:param rules:
+		:type rules: :class:`card_game.rules.Rules`
 		"""
 		self.players = []
 		self.players.extend(players)
@@ -36,15 +44,14 @@ class GameManager(object):
 		self._observers = []
 	
 	def next_player(self):
-		"""
-		change the current player
-		"""
+		"""change the current player"""
 		self._current_player = (self._current_player + self._direction + len(self.players)) % len(self.players)
 	
 	def current_player(self):
 		"""
 		get the current player in the list
-		:rtype: Player
+		
+		:rtype: :class:`card_game.player.Player`
 		"""
 		return self.players[self._current_player]
 	
@@ -75,14 +82,16 @@ class GameManager(object):
 		self._context[constants.CONTEXT.PLAYERS] = self.players
 		self.who_shuffled()
 		self.pile.play_card(self.deck.draw_card())
-		Logger.debug("starting game", self.TAG)
+		Logger.debug("starting game", self._TAG)
 		self.running = True
 	
 	def get_options(self, player):
 		"""
 		figure out what options to present to the user
-		:type player: Player
-		:rtype: list
+
+		:param player: player to get options for
+		:type player: :class:`card_game.player.Player`
+		:rtype: list(:class:`card_game.action.Action`)
 		"""
 		options = []
 		for card in player.hand:
@@ -92,19 +101,22 @@ class GameManager(object):
 		return options
 
 	def display_status(self): #pragma: no cover
+		"""TODO deprecated"""
 		self.interface.render("##############################")
 		self.interface.render("# Current turn: "+self.current_player().name)
 		self.interface.render("# Top card: "+str(self.pile.top_card()))
 		self.interface.render("##############################")
 	
 	def update_state(self):
+		"""update things that need to every turn"""
 		self._context[constants.CONTEXT.TOP_CARD] = self.pile.top_card()
 		self._context[constants.CONTEXT.CURRENT_PLAYER] = self.current_player()
 	
 	def observe(self, observer):
 		"""
-		add the observer to the list
-		observer must have a .update
+		add the observer to the list, observer must have a .update
+
+		:param object observer:
 		"""
 		update_method = getattr(observer, "update")
 		assert callable(update_method)
@@ -113,22 +125,22 @@ class GameManager(object):
 	def deleteObserver(self, observer):
 		"""
 		remove observer from list
+
+		:param object observer:
 		"""
 		if observer in self._observers:
 			self._observers.remove(observer)
 	
 	def update_observers(self):
-		"""
-		give all the observers the updated game state
-		"""
+		"""give all the observers the updated game state"""
 		for o in self._observers:
 			o.update(self._context)
 
 	def run(self): # pragma: no cover
 		"""
 		Play the game
-		:return: the game context
-			this is to allow some anaytics to happen
+
+		:return: the game context, this is to allow some anaytics to happen
 		:rtype: dict
 		"""
 		self._preRun()
@@ -140,11 +152,11 @@ class GameManager(object):
 			# get list of valid options for player
 			options = self.get_options(player)
 			# get option from player
-			Logger.debug("Asking "+player.name+" for choice", self.TAG)
+			Logger.debug("Asking "+player.name+" for choice", self._TAG)
 			choice = self.interface.get_choice(options, "Choose an action: ", player)
 			# act on that option
-			Logger.debug("Got option \""+str(choice)+'"', self.TAG)
-			Logger.debug("Running action "+str(choice.__class__.__name__), self.TAG)
+			Logger.debug("Got option \""+str(choice)+'"', self._TAG)
+			Logger.debug("Running action "+str(choice.__class__.__name__), self._TAG)
 			choice.run(self)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
@@ -154,25 +166,31 @@ class GameManager(object):
 			self.next_player()
 			# check if there's cards left in the deck
 			if self.deck.need_to_shuffle():
-				Logger.debug("shuffling", self.TAG)
+				Logger.debug("shuffling", self._TAG)
 				self.shuffle()
 		Logger.debug("Game ended")
 		return self._context
 
 class TextInterface(object):
-	"""
-	Gets user input over terminal
-	"""
+	"""Interacts with user over terminal"""
 	TAG = "INTERFACE"
 	@classmethod
 	def render(cls, msg): # pragma: no cover
+		"""
+		display a string
+
+		:param str msg:
+		"""
 		print msg
 	
 	@classmethod
 	def get_input(cls, prompt=None, player=None):
 		"""
-		gets a string from the user
-		:type prompt: str
+		gets a string from the **correct** user
+
+		:param str prompt:
+		:param player: the user to get data from (makes more sense with multiple possible connections)
+		:type player: :class:`card_game.player.Player`
 		:rtype: str
 		"""
 		Logger.debug("Taking input from user", cls.TAG)
@@ -180,6 +198,9 @@ class TextInterface(object):
 
 	@classmethod
 	def get_int(cls, prompt=None, player=None):
+		"""
+		:rtype: int
+		"""
 		output = None
 		while not output:
 			output = None
@@ -193,12 +214,12 @@ class TextInterface(object):
 	@classmethod
 	def get_choice(cls, options, prompt="", player=None):
 		"""
-		get a choice from a user
-		user will see choices in 1 indexed form
+		get a choice from a user, choices displayed in 1-indexed form
+
 		:param options: list of descriptions to present to the user
-		:type options: list
-		:return: the item chosen from the list
-		:rtype: Action
+		:type options: list(:class:`card_game.action.Action`)
+		:return: the action chosen from the list
+		:rtype: :class:`card_game.actions.Action`
 		"""
 		for i in range(len(options)):
 			cls.render("{}: {}".format(str(i+1), options[i]))

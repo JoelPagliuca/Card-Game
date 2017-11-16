@@ -5,25 +5,32 @@ Assume that the current player is who played the card with the action
 """
 from abc import ABCMeta, abstractmethod
 
-__all__ = ["PlayCard", "DrawCard", "Reverse"]
+__all__ = ["Action", "PlayCard", "DrawCard", "Reverse"]
 
 class Action(object):
 	"""
 	Base class for all actions
-	has a run and toDict methods
+
+	:ivar str id: so we can reference
+	:ivar Card card: card the action originates from
 	"""
 	__metaclass__ = ABCMeta
-	TAG = "ACTION"
+	_TAG = "ACTION"
 	def __init__(self, card):
+		"""
+		:param card: keep this reference for later
+		:type card: :class:`card_game.card.card`
+		"""
 		self.card = card
 		self.id = str(id(self))
 	
 	def toDict(self):
 		"""
 		Convert to JSON string
-		:rtype: dict
+
+		:rtype: dict(str, str)
 		"""
-		output = { "action": self.TAG, "id": self.id }
+		output = { "action": self._TAG, "id": self.id }
 		if self.card:
 			output["card"] = self.card.toDict()
 		return output
@@ -32,32 +39,30 @@ class Action(object):
 	def run(self, game_manager):
 		"""
 		Make the action happen
-		:type game_manager: GameManager
+
+		:param game_manager:
+		:type game_manager: :class:`card_game.engine.GameManager`
 		"""
 		raise NotImplementedError()
 
 class PlayCard(Action):
-	TAG = "PLAY"
-	"""
-	Just play the card
-	"""
+	"""Just play the card"""
+	_TAG = "PLAY"
 	def run(self, game_manager):
 		player = game_manager.current_player()
 		player.hand.remove(self.card)
 		game_manager.pile.play_card(self.card)
 
 class DrawCard(Action):
-	TAG = "DRAW"
+	"""Pick up the card"""
+	_TAG = "DRAW"
 	def run(self, game_manager):
-		"""
-		Make the action happen
-		:type game_manager: GameManager
-		"""
 		top_card = game_manager.deck.draw_card()
 		game_manager.current_player().take_card(top_card)
 
 class Reverse(PlayCard):
-	TAG = "REVERSE"
+	"""Reverse direction of gameplay"""
+	_TAG = "REVERSE"
 	def run(self, game_manager):
 		super(Reverse, self).run(game_manager)
 		game_manager.change_direction()
