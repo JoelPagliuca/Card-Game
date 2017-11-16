@@ -8,8 +8,11 @@ from abc import ABCMeta, abstractmethod
 __all__ = ["Action", "PlayCard", "DrawCard", "Reverse"]
 
 class Action(object):
-	"""Base class for all actions
-	has a `run` and `toDict` methods
+	"""
+	Base class for all actions
+
+	:ivar str id: so we can reference
+	:ivar Card card: card the action originates from
 	"""
 	__metaclass__ = ABCMeta
 	_TAG = "ACTION"

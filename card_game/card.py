@@ -7,7 +7,15 @@ import constants
 __all__ = ["Card", "Deck", "Pile"]
 
 class Card(object):
-	"""A generic card"""
+	"""
+	A generic card
+
+	:ivar str id: so we can reference this card
+	:ivar str value: card value
+	:ivar str suit: suit or color
+	:ivar list(Action) actions: actions this card can be used for, 
+		needs to be an array because WILD will have 4 actions
+	"""
 	def __init__(self, value, suit):
 		"""
 		:param str value: card value
@@ -15,7 +23,7 @@ class Card(object):
 		"""
 		self.value = value
 		self.suit = suit
-		self.actions = []	# needs to be an array because WILD will have 4 actions....
+		self.actions = []
 		self.id = str(id(self))
 	
 	def __repr__(self):
