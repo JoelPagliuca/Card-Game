@@ -5,7 +5,7 @@ Assume that the current player is who played the card with the action
 """
 from abc import ABCMeta, abstractmethod
 
-__all__ = ["Action", "PlayCard", "DrawCard", "Reverse"]
+__all__ = ["Action", "PlayCard", "DrawCard", "Reverse", "Skip"]
 
 class Action(object):
 	"""
@@ -66,3 +66,10 @@ class Reverse(PlayCard):
 	def run(self, game_manager):
 		super(Reverse, self).run(game_manager)
 		game_manager.change_direction()
+
+class Skip(PlayCard):
+	"""Reverse direction of gameplay"""
+	_TAG = "SKIP"
+	def run(self, game_manager):
+		super(Skip, self).run(game_manager)
+		game_manager.next_player()

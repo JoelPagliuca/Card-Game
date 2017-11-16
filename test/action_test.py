@@ -54,3 +54,22 @@ class ReverseTest(CGTestCase):
 		self.assertIsNotNone(rev1.id)
 		rev2 = Reverse(self.card1)
 		self.assertNotEqual(rev1.id, rev2.id)
+
+class SkipTest(CGTestCase):
+	def test_skip(self):
+		p1 = self.gm.current_player()
+		self.gm.current_player().take_card(self.card1)
+		skip = Skip(self.card1)
+		# figure out who the next player should be after skip
+		self.gm.next_player()
+		self.gm.next_player()
+		p_next = self.gm.current_player()
+		p = self.gm.current_player()
+		# go back to that first player
+		self.gm.change_direction()
+		self.gm.next_player()
+		self.gm.next_player()
+		self.assertEqual(p1, self.gm.current_player())
+		skip.run(self.gm)
+		self.assertEqual(self.gm.current_player(), p_next)
+	
