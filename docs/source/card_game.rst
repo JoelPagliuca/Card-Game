@@ -38,3 +38,11 @@ player
     :members:
     :undoc-members:
     :special-members: __init__
+
+rules
+--------------------
+.. automodule:: card_game.rules
+    :members:
+    :show-inheritance:
+    :undoc-members:
+    :special-members: __init__

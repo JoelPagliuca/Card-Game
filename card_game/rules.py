@@ -25,7 +25,8 @@ class Rules(object):
 	def check_for_win(cls, context={}):
 		"""
 		checks to see if the game has been won yet
-		:rtype: Player
+
+		:rtype: :class:`card_game.player.Player`
 		"""
 		raise NotImplementedError()
 	
@@ -42,16 +43,29 @@ class Rules(object):
 
 class SimpleRules(Rules):
 	"""
-	Basically just put any card on top of another
-	Also used for unit testing
+	Basically just put any card on top of another, mainly used for unit testing
 	"""
 	CARDS_TO_DEAL = 7
 	@classmethod
 	def can_be_played(cls, card, context={}):
+		"""
+		under the current game context, can card be played
+
+		:param card:
+		:type card: :class:`card_game.card.Card`
+		:param dict(str,object) context: game context
+		:rtype: bool
+		"""
 		return True
 	
 	@classmethod
 	def check_for_win(cls, context={}):
+		"""
+		have the win conditions been met?
+
+		:param dict(str,object) context: game context
+		:rtype: bool
+		"""
 		players = context.get(constants.CONTEXT.PLAYERS, [])
 		for p in players:
 			if len(p.hand) == 0:
@@ -60,6 +74,13 @@ class SimpleRules(Rules):
 
 	@classmethod
 	def cards_to_deal(cls, context={}):
+		"""
+		figure out how many cards to deal out, 
+		usually a static number, but for games like cheat it depends on number of players
+		
+		:param dict(str,object) context: game context
+		:rtype: int
+		"""
 		return cls.CARDS_TO_DEAL
 
 class MelbourneRules(SimpleRules):
@@ -69,6 +90,7 @@ class MelbourneRules(SimpleRules):
 	TAG = "MELBRULES"
 	@classmethod
 	def can_be_played(cls, card, context={}):
+		"""More complex implementation"""
 		top_card = context.get(constants.CONTEXT.TOP_CARD, None)
 		Logger.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
 		if top_card:
