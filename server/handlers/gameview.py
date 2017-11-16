@@ -59,7 +59,7 @@ class GameViewHandler(BaseHandler):
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
 		global GAME_MANAGER, PLAYERS
-		self.player = Player(names.get_full_name()) # TODO https://github.com/treyhunner/names
+		self.player = Player(names.get_full_name())
 		self.client_id = self.player.secret
 		# stop the webserver crashing when there's too many players
 		if len(PLAYERS) == MAX_PLAYERS:
