@@ -5,7 +5,7 @@ card_game package
 =========================
 
 action
-------
+--------------------
 .. automodule:: card_game.action
     :members:
     :undoc-members:
@@ -13,14 +13,21 @@ action
     :special-members: __init__
 
 card
-----
+--------------------
 .. automodule:: card_game.card
     :members:
     :undoc-members:
     :special-members: __init__
 
 constants
----------
+--------------------
 .. automodule:: card_game.constants
     :members:
     :undoc-members:
+
+engine
+--------------------
+.. automodule:: card_game.engine
+    :members:
+    :undoc-members:
+    :special-members: __init__
