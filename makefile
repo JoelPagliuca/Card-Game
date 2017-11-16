@@ -37,8 +37,4 @@ clean:		##
 	rm -f *.pyc
 	rm -f .coverage
 	rm -f .noseids
-	rm -rf docs/build
-
-clobber:	##
-clobber: clean
 	rm -rf build
