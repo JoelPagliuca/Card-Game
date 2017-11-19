@@ -1,4 +1,5 @@
 """Just some classes I couldn't find a better place for"""
+from handlers.gameview import ALL_CLIENTS as CLIENTS
 
 from card_game.engine import TextInterface
 
@@ -33,8 +34,9 @@ class WebSocketInterface(TextInterface):
 	@classmethod
 	def get_choice(cls, options, prompt="", player=None):
 		"""
-		get a choice from a user
+		get a choice from a user. 
 		expecting '{"input": "action.id"}' from the user
+
 		:param options: list of descriptions to present to the user
 		:type options: list(:class:`card_game.action.Action`)
 		:return: the item chosen from the list

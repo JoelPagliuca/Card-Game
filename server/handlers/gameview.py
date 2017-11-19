@@ -4,7 +4,6 @@ Handler for viewing/interacting with the game
 import logging
 import json
 import threading
-import uuid
 import time
 
 import names
@@ -25,18 +24,18 @@ PLAYERS = []
 
 GAME_MANAGER = None # the game manager for everything
 
-CLIENTS = {}		# Player -> Handler
+ALL_CLIENTS = {}		# Player -> Handler
 
 def start_game():
 	"""
-	background a game instance
+	background a game instance, 
 	connect all the clients to the game
 	"""
 	global GAME_MANAGER
 	GAME_MANAGER = GameManager(PLAYERS, GET_DECK(), RULES)
 	GAME_MANAGER.interface = WebSocketInterface
-	for _, client in CLIENTS.items():
-		GAME_MANAGER.observe(client)
+	for _, client in ALL_CLIENTS.items():
+		GAME_MANAGER.observe(client)	# FIXME do real observer pattern, client.observe(observable)
 	logging.info("Starting game")
 	game_thread = threading.Thread(target=GAME_MANAGER.run)
 	game_thread.start()
@@ -46,16 +45,14 @@ def stop_game():
 	logging.info("Stopping game")
 	# remove all players, close their connections, kill the game
 	PLAYERS[:] = []
-	for player in CLIENTS:
-		GAME_MANAGER.deleteObserver(CLIENTS[player])
-		CLIENTS[player].close()
-	CLIENTS.clear()
+	for player in ALL_CLIENTS:
+		GAME_MANAGER.deleteObserver(ALL_CLIENTS[player])
+		ALL_CLIENTS[player].close()	# FIXME write out a GAME_OVER message to the client
+	ALL_CLIENTS.clear()
 	GAME_MANAGER = None
 
 class GameViewHandler(BaseHandler):
-	"""
-	communicates with the clients and game instance
-	"""
+	"""communicates with a client and game instance"""
 	
 	def __init__(self, application, request, **kwargs):
 		super(BaseHandler, self).__init__(application, request, **kwargs)
@@ -66,14 +63,12 @@ class GameViewHandler(BaseHandler):
 		if len(PLAYERS) == MAX_PLAYERS:
 			stop_game()
 		PLAYERS.append(self.player)
-		CLIENTS[self.player] = self
+		ALL_CLIENTS[self.player] = self
 		self.input = None
 		logging.info("New handler created for "+self.player.name)
 
 	def open(self):
-		"""
-		start a new player's connection
-		"""
+		"""start a new player's connection"""
 		global GAME_MANAGER
 		logging.info("Opened connection for client "+self.client_id)
 		# start the game
@@ -82,18 +77,14 @@ class GameViewHandler(BaseHandler):
 			start_game()
 	
 	def on_message(self, message):
-		"""
-		get an input from the user
-		"""
+		"""get an input from the user"""
 		message = json.loads(message)
 		input_ = message.get('input', "")
 		self.input = input_
 		logging.info("got "+self.input+" from "+self.player.name)
 	
 	def on_close(self):
-		"""
-		stop the running game
-		"""
+		"""stop the running game"""
 		try:
 			logging.info(self.client_id+" disconnect. Ending game")
 			stop_game()
@@ -103,6 +94,7 @@ class GameViewHandler(BaseHandler):
 	def update(self, data):
 		"""
 		receive the game context from the GameManager
+
 		:type data: dict
 		"""
 		logging.info("Update from the game")
