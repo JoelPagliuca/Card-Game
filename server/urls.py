@@ -8,5 +8,5 @@ from handlers.gamecreate import GameCreateHandler
 url_patterns = [
 	(r"/hello", HelloHandler),
 	(r"/gamecreate", GameCreateHandler),
-	(r"/gameview", GameViewHandler),
+	(r"/gameview/(.*)", GameViewHandler),
 ]
