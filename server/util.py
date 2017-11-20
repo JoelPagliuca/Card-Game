@@ -1,5 +1,5 @@
 """Just some classes I couldn't find a better place for"""
-from handlers.gameview import ALL_CLIENTS as CLIENTS
+from server.data import CLIENTS
 
 from card_game.engine import TextInterface
 

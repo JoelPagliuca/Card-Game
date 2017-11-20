@@ -10,6 +10,7 @@ import names
 
 from base import BaseHandler
 from server.util import WebSocketInterface
+from data import CLIENTS, GAMES
 
 from card_game import constants
 from card_game.player import Player
@@ -24,8 +25,6 @@ PLAYERS = []
 
 GAME_MANAGER = None # the game manager for everything
 
-ALL_CLIENTS = {}		# Player -> Handler
-
 def start_game():
 	"""
 	background a game instance, 
@@ -34,7 +33,7 @@ def start_game():
 	global GAME_MANAGER
 	GAME_MANAGER = GameManager(PLAYERS, GET_DECK(), RULES)
 	GAME_MANAGER.interface = WebSocketInterface
-	for _, client in ALL_CLIENTS.items():
+	for _, client in CLIENTS.items():
 		GAME_MANAGER.observe(client)	# FIXME do real observer pattern, client.observe(observable)
 	logging.info("Starting game")
 	game_thread = threading.Thread(target=GAME_MANAGER.run)
@@ -45,10 +44,10 @@ def stop_game():
 	logging.info("Stopping game")
 	# remove all players, close their connections, kill the game
 	PLAYERS[:] = []
-	for player in ALL_CLIENTS:
-		GAME_MANAGER.deleteObserver(ALL_CLIENTS[player])
-		ALL_CLIENTS[player].close()	# FIXME write out a GAME_OVER message to the client
-	ALL_CLIENTS.clear()
+	for player in CLIENTS:
+		GAME_MANAGER.deleteObserver(CLIENTS[player])
+		CLIENTS[player].close()	# FIXME write out a GAME_OVER message to the client
+	CLIENTS.clear()
 	GAME_MANAGER = None
 
 class GameViewHandler(BaseHandler):
@@ -63,7 +62,7 @@ class GameViewHandler(BaseHandler):
 		if len(PLAYERS) == MAX_PLAYERS:
 			stop_game()
 		PLAYERS.append(self.player)
-		ALL_CLIENTS[self.player] = self
+		CLIENTS[self.player] = self
 		self.input = None
 		logging.info("New handler created for "+self.player.name)
 
