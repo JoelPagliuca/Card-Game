@@ -21,6 +21,18 @@ class GameController(object):
 		self.max_players = kwargs.get("max_players", 3)
 		self.clients = {}		# Player -> Handler
 		logging.info("created GameController for game "+self.id)
+
+	def add_player(self, player, client):
+		"""
+		add player to the controller, will start the game if max_players hit
+
+		:param player: the player to add
+		:param client: the client for the player
+		"""
+		self.players.append(player)
+		self.clients[player.id] = client
+		if len(self.players) >= self.max_players:
+			self.start_game()
 	
 	def start_game(self):
 		self._game = GameManager(self.players, GET_DECK(), RULES)
