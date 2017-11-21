@@ -3,7 +3,15 @@ import './App.css';
 
 import {Layer, Rect, Text, Stage} from 'react-konva';
 import PropTypes from 'prop-types';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button';
+import Paper from 'material-ui/Paper';
+import Grid from 'material-ui/Grid';
 
 export const CONSTANTS = {
   WEBSOCKET: "ws://"+window.location.host+"/websocket/gameview",
@@ -22,6 +30,10 @@ const SUITS = {
   PURPLE: '#F0C',
   BLACK: '#333'
 };
+
+const style = {
+  margin: 12
+}
 
 class Card extends Component {
 
@@ -208,13 +220,56 @@ class Game extends Component {
   };
 };
 
+/**
+ * First point of contact, user -> new game or join game
+ */
+const paper_style = {
+  padding: 6
+}
+class GameSelector extends Component {
+  render() {
+    return (
+      <Grid container spacing="24">
+        <Grid item xs={1}></Grid>
+        <Grid item xs={5}>
+          <Paper zDepth="2" style={paper_style}>
+            <h3>New Game</h3>
+            <TextField
+              defaultValue="3"
+              label="Number of players"
+            />
+            <Button raised color="primary" style={style}>Start</Button>
+          </Paper>
+        </Grid>
+        <Grid item xs={5}>
+          <Paper zDepth="2" style={paper_style}>
+            <h3>Join Game</h3>
+            <TextField
+              label="Game ID"
+            />
+            <Button raised color="primary" style={style}>Join</Button>
+          </Paper>
+        </Grid>
+        <Grid item xs={1}></Grid>
+      </Grid>
+    )
+  }
+}
+
 class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
         <div className="App">
-          <h1>UNO</h1>
-          <Game />
+          <AppBar position="static">
+            <Toolbar>
+              <Typography type="title" color="inherit">
+                UNO
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <div id="content"><GameSelector /></div>
+          {/* <Game /> */}
         </div>
       </MuiThemeProvider>
     );
