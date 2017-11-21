@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "konva": "^1.7.2",
+    "material-ui": "^0.19.4",
     "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-konva": "^1.1.5",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.13"
   },
   "scripts": {

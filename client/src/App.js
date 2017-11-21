@@ -3,6 +3,7 @@ import './App.css';
 
 import {Layer, Rect, Text, Stage} from 'react-konva';
 import PropTypes from 'prop-types';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 export const CONSTANTS = {
   WEBSOCKET: "ws://"+window.location.host+"/websocket/gameview",
@@ -210,9 +211,12 @@ class Game extends Component {
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Game />
-      </div>
+      <MuiThemeProvider>
+        <div className="App">
+          <h1>UNO</h1>
+          <Game />
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
