@@ -9,14 +9,11 @@ import time
 import names
 
 from base import BaseHandler
-from server.util import WebSocketInterface
+from server.util import WebSocketInterface, ACTION
 from server import data
 
 from card_game import constants
 from card_game.player import Player
-from card_game.engine import GameManager
-from card_game.rules import MelbourneRules as RULES
-from card_game.data.decks import GET_UNO_DECK as GET_DECK
 
 __all__ = ["GameViewHandler"]
 
@@ -54,7 +51,7 @@ class GameViewHandler(BaseHandler):
 			self.close()
 			return
 		controller.add_player(self.player, self)
-		data.CLIENTS[self.player.id] = self
+		data.CLIENTS[self.player] = self
 		logging.info("handled game id: "+game_id)
 	
 	def on_message(self, message):

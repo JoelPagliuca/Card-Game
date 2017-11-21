@@ -1,7 +1,10 @@
 """Just some classes I couldn't find a better place for"""
-from server.data import CLIENTS
+from server.data import CLIENTS, ACTION
 
 from card_game.engine import TextInterface
+
+import logging
+import time
 
 __all__ = ["WebSocketInterface"]
 
@@ -58,10 +61,3 @@ class WebSocketInterface(TextInterface):
 				if o.id == choice:
 					return o
 			continue
-
-class ACTION():
-	"""
-	message types being sent to the client
-	"""
-	UPDATE = "UPDATE"	# game state update
-	OPTION = "OPTION"	# request option selection from user
