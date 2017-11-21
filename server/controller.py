@@ -46,4 +46,11 @@ class GameController(object):
 		game_thread.start()
 	
 	def stop_game(self):
-		pass
+		logging.info("Stopping game "+self.id)
+		# remove all players, close their connections, kill the game
+		self.players[:] = []
+		for player in self.clients:
+			self._game.deleteObserver(self.clients[player])
+			self.clients[player].close()	# FIXME write out a GAME_OVER message to the client
+		self.clients.clear()
+		self._game = None
