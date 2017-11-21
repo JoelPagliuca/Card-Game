@@ -41,11 +41,13 @@ class GameViewHandler(BaseHandler):
 		self.player = Player(names.get_full_name())
 		self.client_id = self.player.secret
 		self.input = None
+		self.game_id = None
 		logging.info("New handler created for "+self.player.name)
 
 	def open(self, game_id):
 		"""start a new player's connection, add it to the game controller"""
 		logging.info("Opened connection for client "+self.client_id)
+		self.game_id = game_id
 		controller = data.GAMES.get(game_id)
 		if not controller:
 			self.close()
@@ -65,7 +67,7 @@ class GameViewHandler(BaseHandler):
 		"""stop the running game"""
 		try:
 			logging.info(self.client_id+" disconnect. Ending game")
-			stop_game()
+			data.GAMES[self.game_id].stop_game()
 		except:
 			pass
 	

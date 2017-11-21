@@ -53,4 +53,4 @@ class GameController(object):
 			self._game.deleteObserver(self.clients[player])
 			self.clients[player].close()	# FIXME write out a GAME_OVER message to the client
 		self.clients.clear()
-		self._game = None
+		self._game.running = False
