@@ -5,7 +5,7 @@ export const CONSTANTS = {
 
 export const LOCATIONS = {
   GAMEVIEW: "ws://"+window.location.host+"/websocket/gameview",
-  GAMECREATE: "ws://"+window.location.host+"/websocket/gamecreate"
+  GAMECREATE: "http://"+window.location.host+"/websocket/gamecreate"
 }
 
 export const ACTIONS = {
