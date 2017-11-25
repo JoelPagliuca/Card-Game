@@ -18,17 +18,27 @@ const paper_style = {
 }
 class GameSelector extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {number_players: 3};
+  }
+
   newGame() {
     var formData = new FormData();
-    formData.append("number_players", this.refs.numberPlayers.getValue());
+    var number_players = this.state.number_players;
+    formData.append("number_players", number_players);
     fetch(CONSTANTS.LOCATIONS.GAMECREATE, {
       method: "POST",
       body: formData
+    })
+    .then(response => response.json())
+    .then(json => {
+      this.joinGame(json.game_id);
     });
   };
 
   joinGame(game_id) {
-    
+    this.props.history.push("/gameview/"+game_id);
   }
 
   render() {
@@ -39,11 +49,11 @@ class GameSelector extends Component {
           <Paper zDepth="2" style={paper_style}>
             <h3>New Game</h3>
             <TextField
-              ref="numberPlayers"
+              onChange={this._handleNumPlayersChange.bind(this)}
               defaultValue="3"
               label="Number of players"
             />
-            <Button raised color="primary" style={style} onClick={this.newGame}>Start</Button>
+            <Button raised color="primary" style={style} onClick={this.newGame.bind(this)}>Start</Button>
           </Paper>
         </Grid>
         <Grid item xs={5}>
@@ -58,7 +68,14 @@ class GameSelector extends Component {
         <Grid item xs={1}></Grid>
       </Grid>
     );
-  }
+  };
+
+  _handleNumPlayersChange(element) {
+    var value = element.target.value;
+    this.setState({
+      number_players: value
+    });
+  };
 }
 
 export default GameSelector;
