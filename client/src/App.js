@@ -5,13 +5,14 @@ import {Layer, Rect, Text, Stage} from 'react-konva';
 import PropTypes from 'prop-types';
 import { HashRouter, Route } from 'react-router-dom'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
 import GameSelector from './GameSelector'
 
+// FIXME duplication
 export const CONSTANTS = {
   WEBSOCKET: "ws://"+window.location.host+"/websocket/gameview",
   CARD_WIDTH: 100,
@@ -29,6 +30,8 @@ const SUITS = {
   PURPLE: '#F0C',
   BLACK: '#333'
 };
+
+const theme = createMuiTheme();
 
 class Card extends Component {
 
@@ -220,7 +223,7 @@ class Game extends Component {
 class App extends Component {
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
         <div className="App">
           <AppBar position="static">
             <Toolbar>
