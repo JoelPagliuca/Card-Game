@@ -3,7 +3,16 @@ import './App.css';
 
 import {Layer, Rect, Text, Stage} from 'react-konva';
 import PropTypes from 'prop-types';
+import { HashRouter, Route } from 'react-router-dom'
 
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+
+import GameSelector from './GameSelector'
+
+// FIXME duplication
 export const CONSTANTS = {
   WEBSOCKET: "ws://"+window.location.host+"/websocket/gameview",
   CARD_WIDTH: 100,
@@ -21,6 +30,8 @@ const SUITS = {
   PURPLE: '#F0C',
   BLACK: '#333'
 };
+
+const theme = createMuiTheme();
 
 class Card extends Component {
 
@@ -64,7 +75,7 @@ Card.defaultProps = {
 export class GameSocketComponent extends Component {
   constructor(props) {
     super(props);
-    const gameSocket = new WebSocket(CONSTANTS.WEBSOCKET);
+    const gameSocket = new WebSocket(CONSTANTS.WEBSOCKET + "/" + props.game_id);
     this.gameSocket = gameSocket;
     gameSocket.onmessage = (event) => {
       this.handleServerMessage(JSON.parse(event.data));
@@ -108,13 +119,15 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      game_id: this.props.match.params.game_id,
       hand: [],
       top_card: {},
       card_actions: {}, // card.id -> action
     }
     this.gameSocketComponent = new GameSocketComponent({
-      updateUI:this.handleUpdateUI.bind(this),
-      displayTurn:this.handlePlayerTurn.bind(this)
+      updateUI: this.handleUpdateUI.bind(this),
+      displayTurn: this.handlePlayerTurn.bind(this),
+      game_id: this.state.game_id
     })
   };
 
@@ -207,12 +220,29 @@ class Game extends Component {
   };
 };
 
+
+
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Game />
-      </div>
+      <MuiThemeProvider theme={theme}>
+        <div className="App">
+          <AppBar position="static">
+            <Toolbar>
+              <Typography type="title" color="inherit">
+                UNO
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <HashRouter>
+            <div id="content">
+              <Route path="/start" component={GameSelector} />
+              <Route path="/gameview/:game_id" component={Game} />
+            </div>
+          </HashRouter>
+          {/* <Game /> */}
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
