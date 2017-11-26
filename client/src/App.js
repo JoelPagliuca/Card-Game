@@ -75,7 +75,7 @@ Card.defaultProps = {
 export class GameSocketComponent extends Component {
   constructor(props) {
     super(props);
-    const gameSocket = new WebSocket(CONSTANTS.WEBSOCKET);
+    const gameSocket = new WebSocket(CONSTANTS.WEBSOCKET + "/" + props.game_id);
     this.gameSocket = gameSocket;
     gameSocket.onmessage = (event) => {
       this.handleServerMessage(JSON.parse(event.data));
@@ -119,13 +119,15 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      game_id: this.props.match.params.game_id,
       hand: [],
       top_card: {},
       card_actions: {}, // card.id -> action
     }
     this.gameSocketComponent = new GameSocketComponent({
-      updateUI:this.handleUpdateUI.bind(this),
-      displayTurn:this.handlePlayerTurn.bind(this)
+      updateUI: this.handleUpdateUI.bind(this),
+      displayTurn: this.handlePlayerTurn.bind(this),
+      game_id: this.state.game_id
     })
   };
 
@@ -235,7 +237,7 @@ class App extends Component {
           <HashRouter>
             <div id="content">
               <Route path="/start" component={GameSelector} />
-              <Route path="/gameview" component={Game} />
+              <Route path="/gameview/:game_id" component={Game} />
             </div>
           </HashRouter>
           {/* <Game /> */}
