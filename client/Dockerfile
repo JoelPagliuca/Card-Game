@@ -10,4 +10,4 @@ RUN chown -R app:app $HOME/*
 
 USER app
 WORKDIR $HOME/client
-RUN yarn install
+RUN yarn install --non-interactive
