@@ -1,9 +1,10 @@
 """
 manual testing area
 """
+import logging
+
 from card_game import constants
 from card_game.player import Player
-from card_game.util import Logger
 from card_game.engine import GameManager
 from card_game.rules import MelbourneRules as RULES
 from card_game.data.decks import GET_UNO_DECK as GET_DECK
@@ -24,4 +25,4 @@ if __name__ == '__main__':
 	try:
 		main()
 	except KeyboardInterrupt:
-		Logger.debug("Game Over", "GAME")
+		logging.debug("Game Over")

@@ -12,7 +12,6 @@ class WebSocketInterface(TextInterface):
 	"""
 	Gets user input over WebSocket
 	"""
-	_TAG = "WS_IFACE"
 	@classmethod
 	def render(cls, msg):
 		pass

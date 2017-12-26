@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 import logging
 
 import constants
-from util import Logger, abstractclassmethod
+from util import abstractclassmethod
 from action import DrawCard
 
 __all__ = ["SimpleRules", "MelbourneRules"]
