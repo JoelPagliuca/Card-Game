@@ -22,17 +22,6 @@ PLAYERS = []
 
 GAME_MANAGER = None # the game manager for everything
 
-def stop_game():
-	global PLAYERS, GAME_MANAGER
-	logging.info("Stopping game")
-	# remove all players, close their connections, kill the game
-	PLAYERS[:] = []
-	for player in data.CLIENTS:
-		GAME_MANAGER.deleteObserver(data.CLIENTS[player])
-		data.CLIENTS[player].close()	# FIXME write out a GAME_OVER message to the client
-	data.CLIENTS.clear()
-	GAME_MANAGER = None
-
 class GameViewHandler(BaseHandler):
 	"""communicates with a client and game instance"""
 	

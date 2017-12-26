@@ -25,7 +25,7 @@ class WebSocketInterface(TextInterface):
 		:type prompt: str
 		:rtype: str
 		"""
-		logging.debug("Taking input from "+player.name, cls._TAG)
+		logging.debug("Taking input from "+player.name)
 		client = CLIENTS[player]
 		while True:
 			if client.input:
