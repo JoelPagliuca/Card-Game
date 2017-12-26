@@ -189,7 +189,7 @@ class TextInterface(object):
 			output = None
 			try:
 				output = int(cls.get_input(prompt, player))
-				logging.debug("Got "+str(output), cls.TAG)
+				logging.debug("Got "+str(output))
 			except ValueError:
 				logging.debug("That was not an integer")
 		return output
