@@ -134,7 +134,7 @@ class GameManager(object):
 			# get current player
 			player = self.current_player()
 			# get list of valid options for player
-			options = self.rules.get_options(player)
+			options = self.rules.get_options(player, self._context)
 			# get option from player
 			Logger.debug("Asking "+player.name+" for choice", self._TAG)
 			choice = self.interface.get_choice(options, "Choose an action: ", player)
