@@ -5,7 +5,6 @@ import random
 
 import constants
 from card import Pile, Card
-from action import DrawCard
 from util import *
 
 __all__ = ["GameManager", "TextInterface"]
@@ -85,21 +84,6 @@ class GameManager(object):
 		Logger.debug("starting game", self._TAG)
 		self.running = True
 	
-	def get_options(self, player):
-		"""
-		figure out what options to present to the user
-
-		:param player: player to get options for
-		:type player: :class:`card_game.player.Player`
-		:rtype: list(:class:`card_game.action.Action`)
-		"""
-		options = []
-		for card in player.hand:
-			if self.rules.can_be_played(card, self._context):
-				options.extend(card.actions)
-		options.append(DrawCard(None))
-		return options
-
 	def display_status(self): #pragma: no cover
 		"""TODO deprecated"""
 		self.interface.render("##############################")
@@ -150,7 +134,7 @@ class GameManager(object):
 			# get current player
 			player = self.current_player()
 			# get list of valid options for player
-			options = self.get_options(player)
+			options = self.rules.get_options(player)
 			# get option from player
 			Logger.debug("Asking "+player.name+" for choice", self._TAG)
 			choice = self.interface.get_choice(options, "Choose an action: ", player)

@@ -2,9 +2,11 @@
 Rule sets for the game
 """
 from abc import ABCMeta, abstractmethod
+import logging
 
 import constants
 from util import Logger, abstractclassmethod
+from action import DrawCard
 
 __all__ = ["SimpleRules", "MelbourneRules"]
 
@@ -22,11 +24,13 @@ class Rules(object):
 		raise NotImplementedError()
 	
 	@abstractclassmethod
-	def check_for_win(cls, context={}):
+	def get_options(cls, player, context={}):
 		"""
-		checks to see if the game has been won yet
+		figure out what options to present to the user
 
-		:rtype: :class:`card_game.player.Player`
+		:param player: player to get options for
+		:type player: :class:`card_game.player.Player`
+		:rtype: list(:class:`card_game.action.Action`)
 		"""
 		raise NotImplementedError()
 	
@@ -39,7 +43,6 @@ class Rules(object):
 		:rtype: int
 		"""
 		raise NotImplementedError()
-
 
 class SimpleRules(Rules):
 	"""
@@ -57,6 +60,22 @@ class SimpleRules(Rules):
 		:rtype: bool
 		"""
 		return True
+
+	@classmethod
+	def get_options(cls, player, context={}):
+		"""
+		figure out what options to present to the user
+
+		:param player: player to get options for
+		:type player: :class:`card_game.player.Player`
+		:rtype: list(:class:`card_game.action.Action`)
+		"""
+		options = []
+		for card in player.hand:
+			if cls.can_be_played(card, context):
+				options.extend(card.actions)
+		options.append(DrawCard(None))
+		return options
 	
 	@classmethod
 	def check_for_win(cls, context={}):
@@ -92,7 +111,7 @@ class MelbourneRules(SimpleRules):
 	def can_be_played(cls, card, context={}):
 		"""More complex implementation"""
 		top_card = context.get(constants.CONTEXT.TOP_CARD, None)
-		Logger.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
+		logging.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
 		if top_card:
 			# check if the value or suit match
 			if top_card.suit == card.suit:

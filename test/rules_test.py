@@ -1,10 +1,13 @@
 """
 """
+from mock import patch
+
 from base_test import CGTestCase
 
 from card_game.rules import *
 from card_game.card import Card
 import card_game.constants as constants
+from card_game import action
 
 class SimpleRulesTests(CGTestCase):
 	def test_can_be_played(self):
@@ -27,6 +30,13 @@ class SimpleRulesTests(CGTestCase):
 	def test_cards_to_deal(self):
 		# super lame test, possible over-engineering
 		self.assertEqual(SimpleRules.cards_to_deal(), SimpleRules.CARDS_TO_DEAL)
+	
+	def test_get_options(self):
+		opts = SimpleRules.get_options(self.player1)
+		self.assertIsInstance(opts[0], action.DrawCard)
+		self.gm.who_shuffled()
+		opts = SimpleRules.get_options(self.player1)
+		self.assertEqual(len(opts), self.gm.rules.CARDS_TO_DEAL+1) # now 1 option per card + draw card
 
 class MelbourneRulesTests(CGTestCase):
 	def test_can_be_played_simple(self):
@@ -39,3 +49,11 @@ class MelbourneRulesTests(CGTestCase):
 		ctx = {constants.CONTEXT.TOP_CARD: None}
 		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_ONE, constants.CARD_RED), ctx))
 		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_BLUE), ctx))
+	
+	@patch("card_game.rules.MelbourneRules.can_be_played", return_value=False)
+	def test_get_options(self, mock):
+		ctx = {constants.CONTEXT.TOP_CARD: Card(constants.CARD_ONE, constants.CARD_BLUE)}
+		self.gm.who_shuffled()
+		opts = MelbourneRules.get_options(self.player1, ctx)
+		print opts
+		self.assertIsInstance(opts[0], action.DrawCard)

@@ -43,13 +43,6 @@ class EngineTests(CGTestCase):
 		self.assertGreater(len(self.player2.hand), 0)
 		self.assertGreater(len(self.player3.hand), 0)
 		self.gm.shuffle()
-	
-	def test_get_options(self):
-		opts = self.gm.get_options(self.player1)
-		self.assertIsInstance(opts[0], action.DrawCard)
-		self.gm.who_shuffled()
-		opts = self.gm.get_options(self.player1)
-		self.assertEqual(len(opts), self.gm.rules.CARDS_TO_DEAL+1) # now 1 option per card + draw card
 
 	def test_shuffle(self):
 		cards_in_deck = len(self.gm.deck._cards)
