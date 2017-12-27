@@ -42,6 +42,12 @@ class GameManager(object):
 		self.running = False
 		self._observers = []
 	
+	def get_context(self):
+		"""
+		:rtype: dict
+		"""
+		return self._context
+	
 	def next_player(self):
 		"""change the current player"""
 		self._current_player = (self._current_player + self._direction + len(self.players)) % len(self.players)
@@ -79,6 +85,8 @@ class GameManager(object):
 		"""
 		self._current_player = 0
 		self._context[constants.CONTEXT.PLAYERS] = self.players
+		self._context[constants.CONTEXT.CURRENT_EFFECT] = None
+		self._context[constants.CONTEXT.CURRENT_EFFECT_VALUE] = 0
 		self.who_shuffled()
 		self.pile.play_card(self.deck.draw_card())
 		logging.debug("starting game")

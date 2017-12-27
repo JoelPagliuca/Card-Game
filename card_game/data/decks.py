@@ -38,4 +38,7 @@ for col in constants.CARD_COLORS:
 	card = Card(constants.CARD_SKIP, col)
 	card.actions.append(Skip(card))
 	CARDS_ACTION.append(card)
+	card = Card(constants.CARD_DRAW_TWO, col)
+	card.actions.append(PlusTwo(card))
+	CARDS_ACTION.append(card)
 	
