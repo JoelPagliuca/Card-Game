@@ -5,7 +5,9 @@ Assume that the current player is who played the card with the action
 """
 from abc import ABCMeta, abstractmethod
 
-__all__ = ["Action", "PlayCard", "DrawCard", "Reverse", "Skip"]
+import constants
+
+__all__ = ["Action", "PlayCard", "DrawCard", "Reverse", "Skip", "PlusTwo"]
 
 class Action(object):
 	"""
@@ -44,6 +46,21 @@ class Action(object):
 		:type game_manager: :class:`card_game.engine.GameManager`
 		"""
 		raise NotImplementedError()
+	
+	def has_effect(self, effect):
+		"""
+		checks for an action with this effect
+
+		:param str effect: the effect we're checking
+		:rtype: bool
+		"""
+		return False
+
+class Effect(object):
+	#TODO convert all actions to effects
+	@classmethod
+	def run(cls, card, game_manager):
+		raise NotImplemented()
 
 class PlayCard(Action):
 	"""Just play the card"""
@@ -54,11 +71,20 @@ class PlayCard(Action):
 		game_manager.pile.play_card(self.card)
 
 class DrawCard(Action):
-	"""Pick up the card"""
+	"""Pick up the top card according to how many effects are stacked up.
+	Then resets the current effect"""
 	_TAG = "DRAW"
 	def run(self, game_manager):
-		top_card = game_manager.deck.draw_card()
-		game_manager.current_player().take_card(top_card)
+		amount = 1
+		ctx = game_manager.get_context()
+		if ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0):
+			amount = ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE]
+		for _ in range(amount):
+			top_card = game_manager.deck.draw_card()
+			game_manager.current_player().take_card(top_card)
+		ctx[constants.CONTEXT.CURRENT_EFFECT] = None
+		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = 0
+		
 
 class Reverse(PlayCard):
 	"""Reverse direction of gameplay"""
@@ -73,3 +99,18 @@ class Skip(PlayCard):
 	def run(self, game_manager):
 		super(Skip, self).run(game_manager)
 		game_manager.next_player()
+
+class PlusTwo(PlayCard):
+	_TAG = "PLUS2"
+
+	def has_effect(self, effect):
+		"""actually checking if there's a PLUS2 in effect"""
+		return effect == constants.CONTEXT.EFFECTS.DRAW_TWO
+
+	def run(self, game_manager):
+		super(PlusTwo, self).run(game_manager)
+		ctx = game_manager.get_context()
+		ctx[constants.CONTEXT.CURRENT_EFFECT] = constants.CONTEXT.EFFECTS.DRAW_TWO
+		current_stack = ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0)
+		current_stack += 2
+		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack

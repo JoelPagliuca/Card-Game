@@ -2,10 +2,10 @@
 All the code that makes the game run
 """
 import random
+import logging
 
 import constants
 from card import Pile, Card
-from action import DrawCard
 from util import *
 
 __all__ = ["GameManager", "TextInterface"]
@@ -20,7 +20,6 @@ class GameManager(object):
 	:ivar TextInterface interface: umm, probably can take this away TODO
 	:ivar bool running: is the game running?
 	"""
-	_TAG = "GAMEMANAGER"
 
 	def __init__(self, players, deck, rules):
 		"""
@@ -42,6 +41,12 @@ class GameManager(object):
 		self.interface = TextInterface
 		self.running = False
 		self._observers = []
+	
+	def get_context(self):
+		"""
+		:rtype: dict
+		"""
+		return self._context
 	
 	def next_player(self):
 		"""change the current player"""
@@ -80,26 +85,13 @@ class GameManager(object):
 		"""
 		self._current_player = 0
 		self._context[constants.CONTEXT.PLAYERS] = self.players
+		self._context[constants.CONTEXT.CURRENT_EFFECT] = None
+		self._context[constants.CONTEXT.CURRENT_EFFECT_VALUE] = 0
 		self.who_shuffled()
 		self.pile.play_card(self.deck.draw_card())
-		Logger.debug("starting game", self._TAG)
+		logging.debug("starting game")
 		self.running = True
 	
-	def get_options(self, player):
-		"""
-		figure out what options to present to the user
-
-		:param player: player to get options for
-		:type player: :class:`card_game.player.Player`
-		:rtype: list(:class:`card_game.action.Action`)
-		"""
-		options = []
-		for card in player.hand:
-			if self.rules.can_be_played(card, self._context):
-				options.extend(card.actions)
-		options.append(DrawCard(None))
-		return options
-
 	def display_status(self): #pragma: no cover
 		"""TODO deprecated"""
 		self.interface.render("##############################")
@@ -150,13 +142,13 @@ class GameManager(object):
 			# get current player
 			player = self.current_player()
 			# get list of valid options for player
-			options = self.get_options(player)
+			options = self.rules.get_options(player, self._context)
 			# get option from player
-			Logger.debug("Asking "+player.name+" for choice", self._TAG)
+			logging.debug("Asking "+player.name+" for choice")
 			choice = self.interface.get_choice(options, "Choose an action: ", player)
 			# act on that option
-			Logger.debug("Got option \""+str(choice)+'"', self._TAG)
-			Logger.debug("Running action "+str(choice.__class__.__name__), self._TAG)
+			logging.debug("Got option \""+str(choice)+'"')
+			logging.debug("Running action "+str(choice.__class__.__name__))
 			choice.run(self)
 			# check for winner, break if there is one
 			winner = self.rules.check_for_win(self._context)
@@ -166,14 +158,13 @@ class GameManager(object):
 			self.next_player()
 			# check if there's cards left in the deck
 			if self.deck.need_to_shuffle():
-				Logger.debug("shuffling", self._TAG)
+				logging.debug("shuffling")
 				self.shuffle()
-		Logger.debug("Game ended")
+		logging.debug("Game ended")
 		return self._context
 
 class TextInterface(object):
 	"""Interacts with user over terminal"""
-	TAG = "INTERFACE"
 	@classmethod
 	def render(cls, msg): # pragma: no cover
 		"""
@@ -193,7 +184,7 @@ class TextInterface(object):
 		:type player: :class:`card_game.player.Player`
 		:rtype: str
 		"""
-		Logger.debug("Taking input from user", cls.TAG)
+		logging.debug("Taking input from user")
 		return raw_input(prompt)
 
 	@classmethod
@@ -206,9 +197,9 @@ class TextInterface(object):
 			output = None
 			try:
 				output = int(cls.get_input(prompt, player))
-				Logger.debug("Got "+str(output), cls.TAG)
+				logging.debug("Got "+str(output))
 			except ValueError:
-				Logger.debug("That was not an integer", cls.TAG)
+				logging.debug("That was not an integer")
 		return output
 	
 	@classmethod

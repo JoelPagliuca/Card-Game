@@ -5,6 +5,7 @@ Environment variables
 	SERVER_COOKIE_SECRET
 """
 import os
+import logging
 
 import tornado
 from tornado.options import define, options
@@ -40,7 +41,9 @@ if 'SERVER_COOKIE_SECRET' in os.environ:
 else:
 	settings['cookie_secret'] = "demo-cookie-secret"
 settings['xsrf_cookies'] = True
-
+# set up correct logging
+if DEPLOYMENT == DeploymentType.DEV:
+	logging.getLogger().setLevel(logging.DEBUG)
 
 if options.config:
 	tornado.options.parse_config_file(options.config)

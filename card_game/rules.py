@@ -2,9 +2,11 @@
 Rule sets for the game
 """
 from abc import ABCMeta, abstractmethod
+import logging
 
 import constants
-from util import Logger, abstractclassmethod
+from util import abstractclassmethod
+from action import DrawCard
 
 __all__ = ["SimpleRules", "MelbourneRules"]
 
@@ -22,11 +24,13 @@ class Rules(object):
 		raise NotImplementedError()
 	
 	@abstractclassmethod
-	def check_for_win(cls, context={}):
+	def get_options(cls, player, context={}):
 		"""
-		checks to see if the game has been won yet
+		figure out what options to present to the user
 
-		:rtype: :class:`card_game.player.Player`
+		:param player: player to get options for
+		:type player: :class:`card_game.player.Player`
+		:rtype: list(:class:`card_game.action.Action`)
 		"""
 		raise NotImplementedError()
 	
@@ -39,7 +43,6 @@ class Rules(object):
 		:rtype: int
 		"""
 		raise NotImplementedError()
-
 
 class SimpleRules(Rules):
 	"""
@@ -57,6 +60,22 @@ class SimpleRules(Rules):
 		:rtype: bool
 		"""
 		return True
+
+	@classmethod
+	def get_options(cls, player, context={}):
+		"""
+		figure out what options to present to the user
+
+		:param player: player to get options for
+		:type player: :class:`card_game.player.Player`
+		:rtype: list(:class:`card_game.action.Action`)
+		"""
+		options = []
+		for card in player.hand:
+			if cls.can_be_played(card, context):
+				options.extend(card.actions)
+		options.append(DrawCard(None))
+		return options
 	
 	@classmethod
 	def check_for_win(cls, context={}):
@@ -92,13 +111,25 @@ class MelbourneRules(SimpleRules):
 	def can_be_played(cls, card, context={}):
 		"""More complex implementation"""
 		top_card = context.get(constants.CONTEXT.TOP_CARD, None)
-		Logger.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
+		logging.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
+		# variables used to determine if the card is playable
+		suit_match = False
+		value_match = False
+		effect_match = False
 		if top_card:
 			# check if the value or suit match
 			if top_card.suit == card.suit:
-				return True
+				suit_match = True
 			elif top_card.value == card.value:
-				return True
+				value_match = True
+			if context.get(constants.CONTEXT.CURRENT_EFFECT, None):
+				effect = context[constants.CONTEXT.CURRENT_EFFECT]
+				for act in card.actions:
+					if act.has_effect(effect):
+						effect_match = True
+			else:
+				effect_match = True
 		else:
 			return True
-		return False
+		logging.debug("About to return effect:{}, suit:{}, value:{}".format(effect_match, suit_match, value_match))
+		return effect_match and (suit_match or value_match)

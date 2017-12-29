@@ -16,11 +16,13 @@ Python code for playing card games. Not a heap of functionality so far.
 
 Game is served [here](http://127.0.0.1:2180/)
 
+Game start page is [here](http://127.0.0.1:2180/#/start)
+
 ## Development
 ### Dependencies
+* `docker`
 * `virtualenv`
 * `makefile` - optional (just read makefile for commands)
-* `docker`
 * `yarn` - optional (client can just be run through docker)
 
 ### Setup

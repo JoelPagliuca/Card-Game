@@ -3,22 +3,7 @@ Utility classes
 """
 import constants
 
-__all__ = ["Logger", "abstractclassmethod"]
-
-class Logger(object): # pragma: no cover
-	"""
-	Simpler implementation of `python.logging`
-	"""
-	@staticmethod
-	def debug(msg, tag=constants.DEFAULT_TAG):
-		"""
-		print :code:`[tag] msg` to the screen
-
-		:param str msg:
-		:param str tag:
-		"""
-		if constants.DEBUG:
-			print "[{}] {}".format(tag, msg)
+__all__ = ["abstractclassmethod"]
 
 class abstractclassmethod(classmethod):
 	"""combines the two decorators"""

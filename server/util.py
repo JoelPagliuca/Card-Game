@@ -12,7 +12,6 @@ class WebSocketInterface(TextInterface):
 	"""
 	Gets user input over WebSocket
 	"""
-	_TAG = "WS_IFACE"
 	@classmethod
 	def render(cls, msg):
 		pass
@@ -25,7 +24,7 @@ class WebSocketInterface(TextInterface):
 		:type prompt: str
 		:rtype: str
 		"""
-		logging.debug("Taking input from "+player.name, cls._TAG)
+		logging.debug("Taking input from "+player.name)
 		client = CLIENTS[player]
 		while True:
 			if client.input:
