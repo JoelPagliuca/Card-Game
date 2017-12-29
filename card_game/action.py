@@ -46,6 +46,15 @@ class Action(object):
 		:type game_manager: :class:`card_game.engine.GameManager`
 		"""
 		raise NotImplementedError()
+	
+	def has_effect(self, effect):
+		"""
+		checks for an action with this effect
+
+		:param str effect: the effect we're checking
+		:rtype: bool
+		"""
+		return False
 
 class Effect(object):
 	#TODO convert all actions to effects
@@ -93,6 +102,11 @@ class Skip(PlayCard):
 
 class PlusTwo(PlayCard):
 	_TAG = "PLUS2"
+
+	def has_effect(self, effect):
+		"""actually checking if there's a PLUS2 in effect"""
+		return effect == constants.CONTEXT.EFFECTS.DRAW_TWO
+
 	def run(self, game_manager):
 		super(PlusTwo, self).run(game_manager)
 		ctx = game_manager.get_context()

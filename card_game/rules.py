@@ -112,12 +112,24 @@ class MelbourneRules(SimpleRules):
 		"""More complex implementation"""
 		top_card = context.get(constants.CONTEXT.TOP_CARD, None)
 		logging.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
+		# variables used to determine if the card is playable
+		suit_match = False
+		value_match = False
+		effect_match = False
 		if top_card:
 			# check if the value or suit match
 			if top_card.suit == card.suit:
-				return True
+				suit_match = True
 			elif top_card.value == card.value:
-				return True
+				value_match = True
+			if context.get(constants.CONTEXT.CURRENT_EFFECT, None):
+				effect = context[constants.CONTEXT.CURRENT_EFFECT]
+				for act in card.actions:
+					if act.has_effect(effect):
+						effect_match = True
+			else:
+				effect_match = True
 		else:
 			return True
-		return False
+		logging.debug("About to return effect:{}, suit:{}, value:{}".format(effect_match, suit_match, value_match))
+		return effect_match and (suit_match or value_match)

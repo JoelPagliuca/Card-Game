@@ -45,6 +45,17 @@ class MelbourneRulesTests(CGTestCase):
 		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_BLUE), ctx))
 		self.assertFalse(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_RED), ctx))
 	
+	def test_can_be_played_effects(self):
+		# test a draw two
+		draw_two = Card(constants.CARD_DRAW_TWO, constants.CARD_BLUE)
+		another_draw_two = Card(constants.CARD_DRAW_TWO, constants.CARD_PURPLE)
+		draw_two.actions.append(action.PlusTwo(draw_two))
+		another_draw_two.actions.append(action.PlusTwo(another_draw_two))
+		ctx = {constants.CONTEXT.TOP_CARD: draw_two, constants.CONTEXT.CURRENT_EFFECT: constants.CONTEXT.EFFECTS.DRAW_TWO, constants.CONTEXT.CURRENT_EFFECT_VALUE: 2}
+		self.assertFalse(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_RED), ctx))
+		self.assertFalse(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_BLUE), ctx))
+		self.assertTrue(MelbourneRules.can_be_played(another_draw_two, ctx))
+	
 	def test_can_be_played_first_card(self):
 		ctx = {constants.CONTEXT.TOP_CARD: None}
 		self.assertTrue(MelbourneRules.can_be_played(Card(constants.CARD_ONE, constants.CARD_RED), ctx))
