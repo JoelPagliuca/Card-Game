@@ -214,7 +214,7 @@ class Game extends Component {
           }
         </Grid>
         <Grid item xs={8}>
-          <h2>State</h2>
+          <h2>Game status</h2>
           { this.state.players && <b>Players:<br/></b>}
           { this.state.players && this.state.players.map((player, index) =>
             <span key={player.id}>
