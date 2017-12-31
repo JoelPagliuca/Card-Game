@@ -43,10 +43,10 @@ class GameSelector extends Component {
 
   render() {
     return (
-      <Grid container spacing="24">
+      <Grid container spacing={24}>
         <Grid item xs={1}></Grid>
         <Grid item xs={5}>
-          <Paper zDepth="2" style={paper_style}>
+          <Paper style={paper_style}>
             <h3>New Game</h3>
             <TextField
               onChange={this._handleNumPlayersChange.bind(this)}
@@ -57,7 +57,7 @@ class GameSelector extends Component {
           </Paper>
         </Grid>
         <Grid item xs={5}>
-          <Paper zDepth="2" style={paper_style}>
+          <Paper style={paper_style}>
             <h3>Join Game</h3>
             <TextField
               label="Game ID"

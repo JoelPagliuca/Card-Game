@@ -9,6 +9,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
+import Grid from 'material-ui/Grid';
 
 import GameSelector from './GameSelector'
 
@@ -37,8 +38,8 @@ class Card extends Component {
 
   render() {
     return (
-      <span display="inline-block">
-        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10} display="inline-block" >
+      <Grid item>
+        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10}>
           <Layer x={5} y={5}>
             <Rect
               width={CONSTANTS.CARD_WIDTH}
@@ -58,7 +59,7 @@ class Card extends Component {
             />
           </Layer>
         </Stage>
-      </span>
+      </Grid>
     )
   }
 }
@@ -134,7 +135,9 @@ class Game extends Component {
   handleUpdateUI(data) {
     this.setState({
       hand: data.hand,
-      top_card: data.top_card
+      top_card: data.top_card,
+      current_player: data.current_player,
+      players: data.players
     });
   }
 
@@ -172,13 +175,12 @@ class Game extends Component {
     let top_card_render = null;
     if (!(Object.keys(this.state.top_card).length === 0)) {
       top_card_render =
-        <div id="top_card">
-          <h2>Top Card</h2>
+        <Grid item xs={6} id="top_card">
           <Card 
             text={this.state.top_card.value.toString()} 
             suit={SUITS[this.state.top_card.suit]}
           />
-        </div>
+        </Grid>
     }
     const cards = this.state.hand.map((card, index) => 
       <span display="inline-block" key={card.id}>
@@ -195,27 +197,40 @@ class Game extends Component {
       </span>
     );
     return (
-      <div>
+      <Grid container spacing={24}>
         {this.gameSocketComponent.render()}
-        <div id="player_hand">
+        <Grid container item xs={4}>
+          {top_card_render}
+          {this.state.drawCardAction && 
+            <Grid item xs={6}>
+              <Card 
+                text=""
+                suit={SUITS.BLACK}
+              />
+              <button href="#" onClick={this.sendInput.bind(this, this.state.drawCardAction.id)}>
+                Draw
+              </button>
+            </Grid>
+          }
+        </Grid>
+        <Grid item xs={8}>
+          <h2>Game status</h2>
+          { this.state.players && <b>Players:<br/></b>}
+          { this.state.players && this.state.players.map((player, index) =>
+            <span key={player.id}>
+              <span>{player.name}</span><br/>
+              <span> {player.num_cards} cards</span><br/>
+            </span>
+            ) }
+          <span><b>Current player:</b> { this.state.current_player && this.state.current_player.name }</span>
+        </Grid>
+        <Grid item xs={12} id="player_hand">
           <h2>Your hand</h2>
-          <div className="container">
+          <Grid container>
             {cards}
-          </div>
-        </div>
-        {top_card_render}
-        {this.state.drawCardAction && 
-          <div>
-            <Card 
-              text=""
-              suit={SUITS.BLACK}
-            />
-            <button href="#" onClick={this.sendInput.bind(this, this.state.drawCardAction.id)}>
-              Draw
-            </button>
-          </div>
-        }
-      </div>
+          </Grid>
+        </Grid>
+      </Grid>
     );
   };
 };
