@@ -22,7 +22,7 @@ export class Card extends Component {
 			  />
 			  <Text
 				text={this.props.text.charAt(0)}
-				fontSize={80}
+				fontSize={CARD_PROPS.CARD_TEXT_SIZE}
 				fill={'#111'}
 				width={CARD_PROPS.CARD_WIDTH}
 				padding={20}
