@@ -48,6 +48,6 @@ for col in constants.CARD_COLORS:
 	card = Card(constants.CARD_WILD, constants.CARD_BLACK)
 	card.actions.append(ChangeSuit(card, constants.CARD_BLUE))
 	card.actions.append(ChangeSuit(card, constants.CARD_RED))
-	card.actions.append(ChangeSuit(card, constants.CARD_PURPLE))
 	card.actions.append(ChangeSuit(card, constants.CARD_YELLOW))
+	card.actions.append(ChangeSuit(card, constants.CARD_PURPLE))
 	CARDS_ACTION.append(card)
