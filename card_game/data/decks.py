@@ -32,13 +32,22 @@ for c in constants.CARD_COLORS:
 # get all action cards for every color
 CARDS_ACTION = []
 for col in constants.CARD_COLORS:
+	# reverse
 	card = Card(constants.CARD_REVERSE, col)
 	card.actions.append(Reverse(card))
 	CARDS_ACTION.append(card)
+	# skip
 	card = Card(constants.CARD_SKIP, col)
 	card.actions.append(Skip(card))
 	CARDS_ACTION.append(card)
+	# draw two
 	card = Card(constants.CARD_DRAW_TWO, col)
 	card.actions.append(PlusTwo(card))
 	CARDS_ACTION.append(card)
-	
+	# wild card
+	card = Card(constants.CARD_WILD, constants.CARD_BLACK)
+	card.actions.append(ChangeSuit(card, constants.CARD_BLUE))
+	card.actions.append(ChangeSuit(card, constants.CARD_RED))
+	card.actions.append(ChangeSuit(card, constants.CARD_PURPLE))
+	card.actions.append(ChangeSuit(card, constants.CARD_YELLOW))
+	CARDS_ACTION.append(card)

@@ -7,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 
 import constants
 
-__all__ = ["Action", "PlayCard", "DrawCard", "Reverse", "Skip", "PlusTwo"]
+__all__ = ["Action", "PlayCard", "DrawCard", "Reverse", "Skip", "PlusTwo", "ChangeSuit"]
 
 class Action(object):
 	"""
@@ -114,3 +114,19 @@ class PlusTwo(PlayCard):
 		current_stack = ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0)
 		current_stack += 2
 		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack
+
+class ChangeSuit(PlayCard):
+	_TAG = "WILD"
+
+	def __init__(self, card, suit=constants.CARD_RED):
+		super(ChangeSuit, self).__init__(card)
+		self.new_suit = suit
+	
+	def toDict(self):
+		output = super(ChangeSuit, self).toDict()
+		output['new_suit'] = self.new_suit
+		return output
+
+	def run(self, game_manager):
+		super(ChangeSuit, self).run(game_manager)
+		self.card.suit = self.new_suit
