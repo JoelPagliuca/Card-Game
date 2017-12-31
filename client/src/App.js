@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import {Layer, Rect, Text, Stage} from 'react-konva';
 import PropTypes from 'prop-types';
 import { HashRouter, Route } from 'react-router-dom'
 
@@ -12,6 +11,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
 import GameSelector from './GameSelector'
+import { Card } from "./Card";
 
 // FIXME duplication
 export const CONSTANTS = {
@@ -33,44 +33,6 @@ const SUITS = {
 };
 
 const theme = createMuiTheme();
-
-class Card extends Component {
-
-  render() {
-    return (
-      <Grid item>
-        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10}>
-          <Layer x={5} y={5}>
-            <Rect
-              width={CONSTANTS.CARD_WIDTH}
-              height={CONSTANTS.CARD_HEIGHT}
-              fill={this.props.suit}
-              stroke={'#111'}
-              strokeWidth={2}
-              cornerRadius={2}
-            />
-            <Text
-              text={this.props.text.charAt(0)}
-              fontSize={80}
-              fill={'#111'}
-              width={CONSTANTS.CARD_WIDTH}
-              padding={20}
-              align={'center'}
-            />
-          </Layer>
-        </Stage>
-      </Grid>
-    )
-  }
-}
-Card.propTypes = {
-  text: PropTypes.string,
-  suit: PropTypes.string
-};
-Card.defaultProps = {
-  text: '0', 
-  suit: SUITS.YELLOW
-};
 
 // FIXME: enough of this export shit
 export class GameSocketComponent extends Component {
