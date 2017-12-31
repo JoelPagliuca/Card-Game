@@ -9,7 +9,7 @@ export const ACTIONS = {
 }
 
 export const CARD_PROPS = {
-  CARD_WIDTH: 100,
+  CARD_WIDTH: 116,
   CARD_HEIGHT: 150,
 }
 
