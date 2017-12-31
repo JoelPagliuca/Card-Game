@@ -175,7 +175,7 @@ class Game extends Component {
     let top_card_render = null;
     if (!(Object.keys(this.state.top_card).length === 0)) {
       top_card_render =
-        <Grid item xm={6} id="top_card">
+        <Grid item xs={6} id="top_card">
           <Card 
             text={this.state.top_card.value.toString()} 
             suit={SUITS[this.state.top_card.suit]}
