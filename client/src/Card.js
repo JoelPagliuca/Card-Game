@@ -42,3 +42,14 @@ Card.defaultProps = {
   text: '0', 
   suit: SUITS.YELLOW
 };
+
+class Action extends Component {
+}
+
+class ActionGroup extends Component {
+  // multiple actions
+}
+
+export class CardWithActions extends Component {
+  
+}
