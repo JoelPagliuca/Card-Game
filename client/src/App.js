@@ -189,7 +189,7 @@ class Game extends Component {
         </Grid>
         <Grid item xs={12} id="player_hand">
           <h2>Your hand</h2>
-          <Grid container direction="row" justify="flex-start" align-items="center">
+          <Grid container>
             {cards}
           </Grid>
         </Grid>

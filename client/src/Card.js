@@ -76,13 +76,13 @@ export class CardWithActions extends Component {
    */
   render () {
     const card = this.props.card;
-    return <Grid container item direction="column">
+    return <span display="inline">
       <Card 
         key={card.id} 
         text={card.value.toString()} 
         suit={SUITS[card.suit]}
       />
       <ActionGroup actions={this.props.actions} callback={this.props.callback}></ActionGroup>
-    </Grid>
+    </span>
   }
 }
