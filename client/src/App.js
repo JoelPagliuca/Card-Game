@@ -11,7 +11,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
 import GameSelector from './GameSelector'
-import { Card } from "./Card";
+import { Card, ActionGroup } from "./Card";
 
 // FIXME duplication
 export const CONSTANTS = {
@@ -152,9 +152,7 @@ class Game extends Component {
           suit={SUITS[card.suit]}
         />
         {this.state.card_actions[card.id] && 
-          <button href="#" onClick={this.handlePlayCard.bind(this, card.id)}>
-            Play Card
-          </button>
+          <ActionGroup actions={[this.state.card_actions[card.id],]}></ActionGroup>
         }
       </span>
     );

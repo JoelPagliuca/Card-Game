@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Layer, Rect, Text, Stage} from 'react-konva';
 import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
 
 import { CARD_PROPS, SUITS } from "./Constants";
 
 export class Card extends Component {
 
   render() {
-    return (
-    <Grid item>
+    return <Grid item>
       <Stage width={CARD_PROPS.CARD_WIDTH+10} height={CARD_PROPS.CARD_HEIGHT+10}>
         <Layer x={5} y={5}>
           <Rect
@@ -31,7 +31,6 @@ export class Card extends Component {
         </Layer>
       </Stage>
     </Grid>
-    )
   }
 }
 Card.propTypes = {
@@ -44,10 +43,29 @@ Card.defaultProps = {
 };
 
 class Action extends Component {
+  /** 
+   * turns an JSON action into a button
+   * this.handlePlayCard.bind(this, card.id)
+  */
+  render() {
+    return <Button raised color="primary" href="#" onClick={console.log(this.props.action)}>
+      {this.props.action.action}
+    </Button>
+  }
 }
 
-class ActionGroup extends Component {
-  // multiple actions
+export class ActionGroup extends Component {
+  // a group of actions, given as an array of JSON arrays
+  render () {
+    var actionComponents = this.props.actions.map((act) => {
+      return <Grid item xs={12} key={act.id}>
+        <Action action={act}></Action>
+      </Grid>
+    });
+    return <Grid container>
+      {actionComponents}
+    </Grid>
+  }
 }
 
 export class CardWithActions extends Component {
