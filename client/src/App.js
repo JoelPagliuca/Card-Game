@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import {Layer, Rect, Text, Stage} from 'react-konva';
-import PropTypes from 'prop-types';
 import { HashRouter, Route } from 'react-router-dom'
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
@@ -12,6 +10,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
 import GameSelector from './GameSelector'
+import { Card, CardWithActions } from "./Card";
 
 // FIXME duplication
 export const CONSTANTS = {
@@ -33,44 +32,6 @@ const SUITS = {
 };
 
 const theme = createMuiTheme();
-
-class Card extends Component {
-
-  render() {
-    return (
-      <Grid item>
-        <Stage width={CONSTANTS.CARD_WIDTH+10} height={CONSTANTS.CARD_HEIGHT+10}>
-          <Layer x={5} y={5}>
-            <Rect
-              width={CONSTANTS.CARD_WIDTH}
-              height={CONSTANTS.CARD_HEIGHT}
-              fill={this.props.suit}
-              stroke={'#111'}
-              strokeWidth={2}
-              cornerRadius={2}
-            />
-            <Text
-              text={this.props.text.charAt(0)}
-              fontSize={80}
-              fill={'#111'}
-              width={CONSTANTS.CARD_WIDTH}
-              padding={20}
-              align={'center'}
-            />
-          </Layer>
-        </Stage>
-      </Grid>
-    )
-  }
-}
-Card.propTypes = {
-  text: PropTypes.string,
-  suit: PropTypes.string
-};
-Card.defaultProps = {
-  text: '0', 
-  suit: SUITS.YELLOW
-};
 
 // FIXME: enough of this export shit
 export class GameSocketComponent extends Component {
@@ -144,10 +105,14 @@ class Game extends Component {
   handlePlayerTurn(data) {
     // data is object id:action, id:action etc..
     var actions = {};
+    // initialise to have empty arrays on each card_id
+    this.state.hand.forEach((card) => {
+      actions[card.id] = [];
+    });
     Object.keys(data).forEach((key) => {
       let act = data[key];
       if (act.action !== "DRAW") {
-        actions[act.card.id] = act;
+        actions[act.card.id].push(act);
       } else {
         this.setState({"drawCardAction": act});
       }
@@ -160,6 +125,10 @@ class Game extends Component {
   handlePlayCard(card_id) {
     // get the action related to the card_id
     this.sendInput(this.state.card_actions[card_id].id);
+  }
+
+  handleActionChoice(action_id) {
+    this.sendInput(action_id);
   }
 
   sendInput(value) {
@@ -183,18 +152,12 @@ class Game extends Component {
         </Grid>
     }
     const cards = this.state.hand.map((card, index) => 
-      <span display="inline-block" key={card.id}>
-        <Card 
-          key={card.id} 
-          text={card.value.toString()} 
-          suit={SUITS[card.suit]}
-        />
-        {this.state.card_actions[card.id] && 
-          <button href="#" onClick={this.handlePlayCard.bind(this, card.id)}>
-            Play Card
-          </button>
-        }
-      </span>
+      <CardWithActions 
+        key={card.id}
+        card={card}
+        actions={this.state.card_actions[card.id] || []}
+        callback={this.handleActionChoice.bind(this)}>
+      </CardWithActions>
     );
     return (
       <Grid container spacing={24}>
@@ -255,7 +218,6 @@ class App extends Component {
               <Route path="/gameview/:game_id" component={Game} />
             </div>
           </HashRouter>
-          {/* <Game /> */}
         </div>
       </MuiThemeProvider>
     );
