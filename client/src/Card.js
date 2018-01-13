@@ -45,25 +45,26 @@ Card.defaultProps = {
 class Action extends Component {
   /** 
    * turns an JSON action into a button
-   * this.handlePlayCard.bind(this, card.id)
+   * gotta make sure we maintain a reference to the Game.send_action_id function
    */
   render() {
-    return <Button raised color="primary" onClick={this.props.callback.bind(this, this.props.action.id)}>
-      {this.props.action.action}
-    </Button>
+    return <Grid item>
+      <Button raised color="primary" onClick={this.props.callback.bind(this, this.props.action.id)}>
+        {this.props.action.action} {this.props.action.new_suit}
+      </Button>
+    </Grid>
   }
 }
 
 export class ActionGroup extends Component {
   // a group of actions, given as an array of JSON arrays
   render () {
-    console.log(this.props.callback)
     var actionComponents = this.props.actions.map((act) => {
-      return <Grid item xs={12} key={act.id}>
+      return <Grid item key={act.id}>
         <Action action={act} callback={this.props.callback}></Action>
       </Grid>
     });
-    return <Grid container>
+    return <Grid container item direction="column">
       {actionComponents}
     </Grid>
   }
@@ -75,12 +76,13 @@ export class CardWithActions extends Component {
    */
   render () {
     const card = this.props.card;
-    return 
-    
-    <Card 
-      key={card.id} 
-      text={card.value.toString()} 
-      suit={SUITS[card.suit]}
-    />
+    return <Grid container item direction="column">
+      <Card 
+        key={card.id} 
+        text={card.value.toString()} 
+        suit={SUITS[card.suit]}
+      />
+      <ActionGroup actions={this.props.actions} callback={this.props.callback}></ActionGroup>
+    </Grid>
   }
 }

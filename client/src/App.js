@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import PropTypes from 'prop-types';
 import { HashRouter, Route } from 'react-router-dom'
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
@@ -11,7 +10,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
 import GameSelector from './GameSelector'
-import { Card, ActionGroup } from "./Card";
+import { Card, CardWithActions } from "./Card";
 
 // FIXME duplication
 export const CONSTANTS = {
@@ -106,10 +105,14 @@ class Game extends Component {
   handlePlayerTurn(data) {
     // data is object id:action, id:action etc..
     var actions = {};
+    // initialise to have empty arrays on each card_id
+    this.state.hand.forEach((card) => {
+      actions[card.id] = [];
+    });
     Object.keys(data).forEach((key) => {
       let act = data[key];
       if (act.action !== "DRAW") {
-        actions[act.card.id] = act;
+        actions[act.card.id].push(act);
       } else {
         this.setState({"drawCardAction": act});
       }
@@ -149,16 +152,12 @@ class Game extends Component {
         </Grid>
     }
     const cards = this.state.hand.map((card, index) => 
-      <span display="inline-block" key={card.id}>
-        <Card 
-          key={card.id} 
-          text={card.value.toString()} 
-          suit={SUITS[card.suit]}
-        />
-        {this.state.card_actions[card.id] && 
-          <ActionGroup actions={[this.state.card_actions[card.id],]} callback={this.handleActionChoice.bind(this)}></ActionGroup>
-        }
-      </span>
+      <CardWithActions 
+        key={card.id}
+        card={card}
+        actions={this.state.card_actions[card.id] || []}
+        callback={this.handleActionChoice.bind(this)}>
+      </CardWithActions>
     );
     return (
       <Grid container spacing={24}>
@@ -190,7 +189,7 @@ class Game extends Component {
         </Grid>
         <Grid item xs={12} id="player_hand">
           <h2>Your hand</h2>
-          <Grid container>
+          <Grid container direction="row" justify="flex-start" align-items="center">
             {cards}
           </Grid>
         </Grid>
