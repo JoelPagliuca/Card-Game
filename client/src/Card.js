@@ -46,9 +46,9 @@ class Action extends Component {
   /** 
    * turns an JSON action into a button
    * this.handlePlayCard.bind(this, card.id)
-  */
+   */
   render() {
-    return <Button raised color="primary" href="#" onClick={console.log(this.props.action)}>
+    return <Button raised color="primary" onClick={this.props.callback.bind(this, this.props.action.id)}>
       {this.props.action.action}
     </Button>
   }
@@ -57,9 +57,10 @@ class Action extends Component {
 export class ActionGroup extends Component {
   // a group of actions, given as an array of JSON arrays
   render () {
+    console.log(this.props.callback)
     var actionComponents = this.props.actions.map((act) => {
       return <Grid item xs={12} key={act.id}>
-        <Action action={act}></Action>
+        <Action action={act} callback={this.props.callback}></Action>
       </Grid>
     });
     return <Grid container>
@@ -69,5 +70,17 @@ export class ActionGroup extends Component {
 }
 
 export class CardWithActions extends Component {
-  
+  /**
+   * card + actions
+   */
+  render () {
+    const card = this.props.card;
+    return 
+    
+    <Card 
+      key={card.id} 
+      text={card.value.toString()} 
+      suit={SUITS[card.suit]}
+    />
+  }
 }

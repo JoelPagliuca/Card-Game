@@ -124,6 +124,10 @@ class Game extends Component {
     this.sendInput(this.state.card_actions[card_id].id);
   }
 
+  handleActionChoice(action_id) {
+    this.sendInput(action_id);
+  }
+
   sendInput(value) {
     // send the input to the server, get rid of all the available actions
     this.gameSocketComponent.sendMessage({"input": value.toString()});
@@ -152,7 +156,7 @@ class Game extends Component {
           suit={SUITS[card.suit]}
         />
         {this.state.card_actions[card.id] && 
-          <ActionGroup actions={[this.state.card_actions[card.id],]}></ActionGroup>
+          <ActionGroup actions={[this.state.card_actions[card.id],]} callback={this.handleActionChoice.bind(this)}></ActionGroup>
         }
       </span>
     );
@@ -215,7 +219,6 @@ class App extends Component {
               <Route path="/gameview/:game_id" component={Game} />
             </div>
           </HashRouter>
-          {/* <Game /> */}
         </div>
       </MuiThemeProvider>
     );
