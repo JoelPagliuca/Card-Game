@@ -15,6 +15,7 @@ class Card(object):
 	:ivar str suit: suit or color
 	:ivar list(Action) actions: actions this card can be used for, 
 		needs to be an array because WILD will have 4 actions
+	:ivar str _initial_color: color to revert back to after reshuffle
 	"""
 	def __init__(self, value, suit):
 		"""
@@ -25,6 +26,7 @@ class Card(object):
 		self.suit = suit
 		self.actions = []
 		self.id = str(id(self))
+		self._initial_color = suit
 	
 	def __repr__(self):
 		return "Card {} - {}".format(self.value, self.suit)
@@ -34,6 +36,12 @@ class Card(object):
 		:rtype: dict(str, str)
 		"""
 		return {"value": self.value, "suit": self.suit, "id": self.id}
+
+	def reset(self):
+		"""
+		only for wild cards atm, will reset state back to initial state
+		"""
+		self.suit = self._initial_color
 
 class Deck(object):
 	"""A collection of cards"""
@@ -109,5 +117,7 @@ class Pile(object):
 		"""
 		output = []
 		output.extend(self._cards)
+		for card in output:
+			card.reset()
 		self._cards = []
 		return output
