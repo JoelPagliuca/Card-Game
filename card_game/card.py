@@ -91,6 +91,7 @@ class Pile(object):
 	"""	Where you put cards, last card in the list is the top card"""
 	def __init__(self):
 		self._cards = []
+		self._top_card = None
 	
 	def play_card(self, a_card):
 		"""
@@ -99,13 +100,14 @@ class Pile(object):
 		:param Card a_card:
 		"""
 		self._cards.append(a_card)
+		self._top_card = a_card
 
 	def top_card(self):
 		"""
 		:rtype: Card
 		"""
-		if self._cards:
-			return self._cards[-1]
+		if self._top_card:
+			return self._top_card
 		else:
 			return None
 
