@@ -15,16 +15,20 @@ class Action(object):
 
 	:ivar str id: so we can reference
 	:ivar Card card: card the action originates from
+	:ivar str description: what this action will do
 	"""
 	__metaclass__ = ABCMeta
 	_TAG = "ACTION"
-	def __init__(self, card):
+	def __init__(self, card, description=""):
 		"""
 		:param card: keep this reference for later
 		:type card: :class:`card_game.card.card`
+		:param str description: description of action
 		"""
 		self.card = card
 		self.id = str(id(self))
+		self.description = description
+		self.effects = []
 	
 	def toDict(self):
 		"""
@@ -59,7 +63,7 @@ class Action(object):
 class Effect(object):
 	#TODO convert all actions to effects
 	@classmethod
-	def run(cls, card, game_manager):
+	def apply(cls, card, game_manager):
 		raise NotImplemented()
 
 class PlayCard(Action):
