@@ -7,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 
 import constants
 
-__all__ = ["Action", "PlayCard", "DrawCard", "Reverse", "Skip", "PlusTwo", "ChangeSuit"]
+__all__ = ["Action", "Effect", "PlayCard", "DrawCard", "Reverse", "Skip", "PlusTwo", "ChangeSuit"]
 
 class Action(object):
 	"""
@@ -16,8 +16,8 @@ class Action(object):
 	:ivar str id: so we can reference
 	:ivar Card card: card the action originates from
 	:ivar str description: what this action will do
+	:ivar list effects: effects to be applied on action run
 	"""
-	__metaclass__ = ABCMeta
 	_TAG = "ACTION"
 	def __init__(self, card, description=""):
 		"""
@@ -36,12 +36,11 @@ class Action(object):
 
 		:rtype: dict(str, str)
 		"""
-		output = { "action": self._TAG, "id": self.id }
+		output = { "action": self._TAG, "id": self.id, "description": self.description }
 		if self.card:
 			output["card"] = self.card.toDict()
 		return output
 	
-	@abstractmethod
 	def run(self, game_manager):
 		"""
 		Make the action happen
@@ -49,7 +48,8 @@ class Action(object):
 		:param game_manager:
 		:type game_manager: :class:`card_game.engine.GameManager`
 		"""
-		raise NotImplementedError()
+		for effect in self.effects:
+			effect.apply(self.card, game_manager)
 	
 	def has_effect(self, effect):
 		"""
@@ -61,8 +61,12 @@ class Action(object):
 		return False
 
 class Effect(object):
-	#TODO convert all actions to effects
-	@classmethod
+	"""
+	Base class for all Effects, 
+	these implement the special cards in the game
+	"""
+	__metaclass__ = ABCMeta
+	@abstractmethod
 	def apply(cls, card, game_manager):
 		raise NotImplemented()
 
@@ -73,6 +77,11 @@ class PlayCard(Action):
 		player = game_manager.current_player()
 		player.hand.remove(self.card)
 		game_manager.pile.play_card(self.card)
+	
+	def apply(cls, card, game_manager):
+		player = game_manager.current_player()
+		player.hand.remove(card)
+		game_manager.pile.play_card(card)
 
 class DrawCard(Action):
 	"""Pick up the top card according to how many effects are stacked up.
