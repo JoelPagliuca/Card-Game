@@ -51,3 +51,10 @@ for col in constants.CARD_COLORS:
 	card.actions.append(Action(card, "Change to Yellow", [PlayCard, ChangeSuitYellow]))
 	card.actions.append(Action(card, "Change to Purple", [PlayCard, ChangeSuitPurple]))
 	CARDS_ACTION.append(card)
+	# draw four
+	card = Card(constants.CARD_DRAW_FOUR, constants.CARD_BLACK)
+	card.actions.append(Action(card, "Draw four Blue", [PlayCard, ChangeSuitBlue, PlusFour]))
+	card.actions.append(Action(card, "Draw four Red", [PlayCard, ChangeSuitRed, PlusFour]))
+	card.actions.append(Action(card, "Draw four Yellow", [PlayCard, ChangeSuitYellow, PlusFour]))
+	card.actions.append(Action(card, "Draw four Purple", [PlayCard, ChangeSuitPurple, PlusFour]))
+	CARDS_ACTION.append(card)

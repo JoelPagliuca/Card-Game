@@ -7,7 +7,20 @@ from abc import ABCMeta, abstractmethod
 
 import constants
 
-__all__ = ["Action", "Effect", "PlayCard", "DrawCard", "Reverse", "Skip", "PlusTwo", "ChangeSuitBlue", "ChangeSuitPurple", "ChangeSuitRed", "ChangeSuitYellow"]
+__all__ = [
+	"Action",
+	"Effect",
+	"PlayCard",
+	"DrawCard",
+	"Reverse",
+	"Skip",
+	"PlusTwo",
+	"PlusFour",
+	"ChangeSuitBlue",
+	"ChangeSuitPurple",
+	"ChangeSuitRed",
+	"ChangeSuitYellow"
+]
 
 class Action(object):
 	"""
@@ -131,6 +144,19 @@ class PlusTwo(PlayCard):
 		ctx[constants.CONTEXT.CURRENT_EFFECT] = constants.CONTEXT.EFFECTS.DRAW_TWO
 		current_stack = ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0)
 		current_stack += 2
+		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack
+
+class PlusFour(PlayCard):
+	def has_effect(cls, effect):
+		"""actually checking if there's a PLUS4 in effect"""
+		return effect == constants.CONTEXT.EFFECTS.DRAW_FOUR
+	
+	@classmethod
+	def apply(cls, card, game_manager):
+		ctx = game_manager.get_context()
+		ctx[constants.CONTEXT.CURRENT_EFFECT] = constants.CONTEXT.EFFECTS.DRAW_FOUR
+		current_stack = ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0)
+		current_stack += 4
 		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack
 
 # these are separate classes to avoid making all effects used as objects
