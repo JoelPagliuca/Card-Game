@@ -50,7 +50,7 @@ class Action extends Component {
   render() {
     return <Grid item>
       <Button raised color="primary" onClick={this.props.callback.bind(this, this.props.action.id)}>
-        {this.props.action.action} {this.props.action.new_suit}
+        {this.props.action.description}
       </Button>
     </Grid>
   }

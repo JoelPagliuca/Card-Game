@@ -26,7 +26,7 @@ for c in constants.CARD_COLORS:
 	for v in constants.CARD_VALUES:
 		card = Card(v, c)
 		# add the play card action to each card
-		card.actions.append(PlayCard(card))
+		card.actions.append(Action(card, "Play Card", [PlayCard]))
 		CARDS_SIMPLE.append(card)
 
 # get all action cards for every color
@@ -34,20 +34,20 @@ CARDS_ACTION = []
 for col in constants.CARD_COLORS:
 	# reverse
 	card = Card(constants.CARD_REVERSE, col)
-	card.actions.append(Reverse(card))
+	card.actions.append(Action(card, "Reverse", [PlayCard, Reverse]))
 	CARDS_ACTION.append(card)
 	# skip
 	card = Card(constants.CARD_SKIP, col)
-	card.actions.append(Skip(card))
+	card.actions.append(Action(card, "Skip", [PlayCard, Reverse]))
 	CARDS_ACTION.append(card)
 	# draw two
 	card = Card(constants.CARD_DRAW_TWO, col)
-	card.actions.append(PlusTwo(card))
+	card.actions.append(Action(card, "Draw two", [PlayCard, PlusTwo]))
 	CARDS_ACTION.append(card)
 	# wild card
 	card = Card(constants.CARD_WILD, constants.CARD_BLACK)
-	card.actions.append(ChangeSuit(card, constants.CARD_BLUE))
-	card.actions.append(ChangeSuit(card, constants.CARD_RED))
-	card.actions.append(ChangeSuit(card, constants.CARD_YELLOW))
-	card.actions.append(ChangeSuit(card, constants.CARD_PURPLE))
+	card.actions.append(Action(card, "Change to Blue", [PlayCard, ChangeSuitBlue]))
+	card.actions.append(Action(card, "Change to Red", [PlayCard, ChangeSuitRed]))
+	card.actions.append(Action(card, "Change to Yellow", [PlayCard, ChangeSuitYellow]))
+	card.actions.append(Action(card, "Change to Purple", [PlayCard, ChangeSuitPurple]))
 	CARDS_ACTION.append(card)

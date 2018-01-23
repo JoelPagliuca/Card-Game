@@ -6,7 +6,7 @@ import logging
 
 import constants
 from util import abstractclassmethod
-from action import DrawCard
+from action import Action, DrawCard
 
 __all__ = ["SimpleRules", "MelbourneRules"]
 
@@ -74,7 +74,7 @@ class SimpleRules(Rules):
 		for card in player.hand:
 			if cls.can_be_played(card, context):
 				options.extend(card.actions)
-		options.append(DrawCard(None))
+		options.append(Action(None, "DRAW", [DrawCard]))
 		return options
 	
 	@classmethod
