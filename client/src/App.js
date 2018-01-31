@@ -111,7 +111,7 @@ class Game extends Component {
     });
     Object.keys(data).forEach((key) => {
       let act = data[key];
-      if (act.action !== "DRAW") {
+      if (act.description !== "DRAW") {
         actions[act.card.id].push(act);
       } else {
         this.setState({"drawCardAction": act});

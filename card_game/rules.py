@@ -6,7 +6,7 @@ import logging
 
 import constants
 from util import abstractclassmethod
-from action import DrawCard
+from action import Action, DrawCard
 
 __all__ = ["SimpleRules", "MelbourneRules"]
 
@@ -74,7 +74,7 @@ class SimpleRules(Rules):
 		for card in player.hand:
 			if cls.can_be_played(card, context):
 				options.extend(card.actions)
-		options.append(DrawCard(None))
+		options.append(Action(None, "DRAW", [DrawCard]))
 		return options
 	
 	@classmethod
@@ -118,7 +118,7 @@ class MelbourneRules(SimpleRules):
 		effect_match = False
 		if top_card:
 			# check if the value or suit match
-			if (top_card.suit == card.suit) or card.suit == constants.CARD_BLACK:
+			if (top_card.suit == card.suit) or (card.suit == constants.CARD_BLACK) or (top_card.suit == constants.CARD_BLACK):
 				suit_match = True
 			elif top_card.value == card.value:
 				value_match = True

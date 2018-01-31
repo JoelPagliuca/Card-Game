@@ -7,7 +7,20 @@ from abc import ABCMeta, abstractmethod
 
 import constants
 
-__all__ = ["Action", "PlayCard", "DrawCard", "Reverse", "Skip", "PlusTwo", "ChangeSuit"]
+__all__ = [
+	"Action",
+	"Effect",
+	"PlayCard",
+	"DrawCard",
+	"Reverse",
+	"Skip",
+	"PlusTwo",
+	"PlusFour",
+	"ChangeSuitBlue",
+	"ChangeSuitPurple",
+	"ChangeSuitRed",
+	"ChangeSuitYellow"
+]
 
 class Action(object):
 	"""
@@ -15,16 +28,21 @@ class Action(object):
 
 	:ivar str id: so we can reference
 	:ivar Card card: card the action originates from
+	:ivar str description: what this action will do
+	:ivar list effects: effects to be applied on action run
 	"""
-	__metaclass__ = ABCMeta
 	_TAG = "ACTION"
-	def __init__(self, card):
+	def __init__(self, card, description="", effects=[]):
 		"""
 		:param card: keep this reference for later
 		:type card: :class:`card_game.card.card`
+		:param str description: description of action
+		:param list effects: 
 		"""
 		self.card = card
 		self.id = str(id(self))
+		self.description = description
+		self.effects = effects
 	
 	def toDict(self):
 		"""
@@ -32,12 +50,11 @@ class Action(object):
 
 		:rtype: dict(str, str)
 		"""
-		output = { "action": self._TAG, "id": self.id }
+		output = { "action": self.description, "id": self.id, "description": self.description }
 		if self.card:
 			output["card"] = self.card.toDict()
 		return output
 	
-	@abstractmethod
 	def run(self, game_manager):
 		"""
 		Make the action happen
@@ -45,7 +62,8 @@ class Action(object):
 		:param game_manager:
 		:type game_manager: :class:`card_game.engine.GameManager`
 		"""
-		raise NotImplementedError()
+		for effect in self.effects:
+			effect.apply(self.card, game_manager)
 	
 	def has_effect(self, effect):
 		"""
@@ -54,27 +72,45 @@ class Action(object):
 		:param str effect: the effect we're checking
 		:rtype: bool
 		"""
-		return False
+		output = False
+		for eff in self.effects:
+			if eff.has_effect(effect):
+				output = True
+		return output
 
 class Effect(object):
-	#TODO convert all actions to effects
-	@classmethod
-	def run(cls, card, game_manager):
+	"""
+	Base class for all Effects, 
+	these implement the special cards in the game
+	"""
+	__metaclass__ = ABCMeta
+	@abstractmethod
+	def apply(cls, card, game_manager):
 		raise NotImplemented()
+	
+	@classmethod
+	def has_effect(cls, effect):
+		"""
+		checks for an action with this effect
 
-class PlayCard(Action):
+		:param str effect: the effect we're checking
+		:rtype: bool
+		"""
+		return False
+
+class PlayCard(Effect):
 	"""Just play the card"""
-	_TAG = "PLAY"
-	def run(self, game_manager):
+	@classmethod
+	def apply(cls, card, game_manager):
 		player = game_manager.current_player()
-		player.hand.remove(self.card)
-		game_manager.pile.play_card(self.card)
+		player.hand.remove(card)
+		game_manager.pile.play_card(card)
 
-class DrawCard(Action):
+class DrawCard(Effect):
 	"""Pick up the top card according to how many effects are stacked up.
 	Then resets the current effect"""
-	_TAG = "DRAW"
-	def run(self, game_manager):
+	@classmethod
+	def apply(cls, card, game_manager):
 		amount = 1
 		ctx = game_manager.get_context()
 		if ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0):
@@ -86,47 +122,61 @@ class DrawCard(Action):
 		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = 0
 		
 
-class Reverse(PlayCard):
+class Reverse(Effect):
 	"""Reverse direction of gameplay"""
-	_TAG = "REVERSE"
-	def run(self, game_manager):
-		super(Reverse, self).run(game_manager)
+	@classmethod
+	def apply(cls, card, game_manager):
 		game_manager.change_direction()
 
-class Skip(PlayCard):
+class Skip(Effect):
 	"""Reverse direction of gameplay"""
-	_TAG = "SKIP"
-	def run(self, game_manager):
-		super(Skip, self).run(game_manager)
+	@classmethod
+	def apply(cls, card, game_manager):
 		game_manager.next_player()
 
-class PlusTwo(PlayCard):
-	_TAG = "PLUS2"
-
-	def has_effect(self, effect):
+class PlusTwo(Effect):
+	@classmethod
+	def has_effect(cls, effect):
 		"""actually checking if there's a PLUS2 in effect"""
 		return effect == constants.CONTEXT.EFFECTS.DRAW_TWO
-
-	def run(self, game_manager):
-		super(PlusTwo, self).run(game_manager)
+	
+	@classmethod
+	def apply(cls, card, game_manager):
 		ctx = game_manager.get_context()
 		ctx[constants.CONTEXT.CURRENT_EFFECT] = constants.CONTEXT.EFFECTS.DRAW_TWO
 		current_stack = ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0)
 		current_stack += 2
 		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack
 
-class ChangeSuit(PlayCard):
-	_TAG = "WILD"
-
-	def __init__(self, card, suit=constants.CARD_RED):
-		super(ChangeSuit, self).__init__(card)
-		self.new_suit = suit
+class PlusFour(Effect):
+	@classmethod
+	def has_effect(cls, effect):
+		"""actually checking if there's a PLUS4 in effect"""
+		return effect == constants.CONTEXT.EFFECTS.DRAW_FOUR
 	
-	def toDict(self):
-		output = super(ChangeSuit, self).toDict()
-		output['new_suit'] = self.new_suit
-		return output
+	@classmethod
+	def apply(cls, card, game_manager):
+		ctx = game_manager.get_context()
+		ctx[constants.CONTEXT.CURRENT_EFFECT] = constants.CONTEXT.EFFECTS.DRAW_FOUR
+		current_stack = ctx.get(constants.CONTEXT.CURRENT_EFFECT_VALUE, 0)
+		current_stack += 4
+		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack
 
-	def run(self, game_manager):
-		super(ChangeSuit, self).run(game_manager)
-		self.card.suit = self.new_suit
+# these are separate classes to avoid making all effects used as objects
+class ChangeSuitBase(Effect):
+	NEW_SUIT = ""
+	@classmethod
+	def apply(cls, card, game_manager):
+		card.suit = cls.NEW_SUIT
+
+class ChangeSuitBlue(ChangeSuitBase):
+	NEW_SUIT = constants.CARD_BLUE
+
+class ChangeSuitRed(ChangeSuitBase):
+	NEW_SUIT = constants.CARD_RED
+
+class ChangeSuitYellow(ChangeSuitBase):
+	NEW_SUIT = constants.CARD_YELLOW
+
+class ChangeSuitPurple(ChangeSuitBase):
+	NEW_SUIT = constants.CARD_PURPLE
