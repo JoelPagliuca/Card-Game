@@ -2,16 +2,28 @@
 
 Python code for playing card games. Not a heap of functionality so far.
 
+## Build Status
+| Branch | Status |
+| ------ | ------ |
+| master | [![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=master)](https://travis-ci.org/JoelPagliuca/Card-Game) |
+| dev    | [![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=dev)](https://travis-ci.org/JoelPagliuca/Card-Game) |
+
 ## Depencies
-* `python2`
+* `docker-compose`
 
 ## Running
-`python main.py`
+`docker-compose up`
+
+Game is served [here](http://127.0.0.1:2180/)
+
+Game start page is [here](http://127.0.0.1:2180/#/start)
 
 ## Development
 ### Dependencies
+* `docker`
 * `virtualenv`
-* `makefile` - optional
+* `makefile` - optional (just read makefile for commands)
+* `yarn` - optional (client can just be run through docker)
 
 ### Setup
 `make dev`
@@ -19,7 +31,48 @@ Python code for playing card games. Not a heap of functionality so far.
 ### Unit tests
 `make test`
 
-## Build Status
-master: [![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=master)](https://travis-ci.org/JoelPagliuca/Card-Game)
+### Solution structure
+* 3 Docker containers
+	* **client**
+		* React front end
+		* port 3000
+	* **server**
+		* Python-Tornado server
+		* also mounts game logic code from `./card_game/`
+		* port 8888
+	* **proxy**
+		* Nginx reverse for the other two containers
+		* port 2180 
+		* `/` maps to **client**:3000
+		* `/websocket` maps to **server**:8888
 
-dev: [![Build Status](https://travis-ci.org/JoelPagliuca/Card-Game.svg?branch=dev)](https://travis-ci.org/JoelPagliuca/Card-Game)
+* * *
+
+## Directory
+* card_game/
+	* game logic - python code for the actual game implementation
+* client/
+	* client - react web app
+* server/
+	* server - python-tornado websocket
+* test/
+	* unit tests
+* .gitignore
+* .travis.yml
+	* travis build config
+* README.md
+	* this file
+* TIL.md
+	* stuff I learnt while working on this project
+* docker-compose.yml
+	* Docker configuration for this project
+* main.py
+	* manual tests for the card-game code
+* makefile
+	* simple automation tasks using make
+* nginx.conf
+	* config for the nginx reverse proxy
+* setup.cfg
+	* settings for the python card-game code
+
+Any other files that pop up are automatically generated.
