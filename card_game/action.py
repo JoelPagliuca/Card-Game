@@ -88,6 +88,7 @@ class Effect(object):
 	def apply(cls, card, game_manager):
 		raise NotImplemented()
 	
+	@classmethod
 	def has_effect(cls, effect):
 		"""
 		checks for an action with this effect
@@ -97,7 +98,7 @@ class Effect(object):
 		"""
 		return False
 
-class PlayCard(Action):
+class PlayCard(Effect):
 	"""Just play the card"""
 	@classmethod
 	def apply(cls, card, game_manager):
@@ -105,7 +106,7 @@ class PlayCard(Action):
 		player.hand.remove(card)
 		game_manager.pile.play_card(card)
 
-class DrawCard(Action):
+class DrawCard(Effect):
 	"""Pick up the top card according to how many effects are stacked up.
 	Then resets the current effect"""
 	@classmethod
@@ -121,19 +122,20 @@ class DrawCard(Action):
 		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = 0
 		
 
-class Reverse(PlayCard):
+class Reverse(Effect):
 	"""Reverse direction of gameplay"""
 	@classmethod
 	def apply(cls, card, game_manager):
 		game_manager.change_direction()
 
-class Skip(PlayCard):
+class Skip(Effect):
 	"""Reverse direction of gameplay"""
 	@classmethod
 	def apply(cls, card, game_manager):
 		game_manager.next_player()
 
-class PlusTwo(PlayCard):
+class PlusTwo(Effect):
+	@classmethod
 	def has_effect(cls, effect):
 		"""actually checking if there's a PLUS2 in effect"""
 		return effect == constants.CONTEXT.EFFECTS.DRAW_TWO
@@ -146,7 +148,8 @@ class PlusTwo(PlayCard):
 		current_stack += 2
 		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack
 
-class PlusFour(PlayCard):
+class PlusFour(Effect):
+	@classmethod
 	def has_effect(cls, effect):
 		"""actually checking if there's a PLUS4 in effect"""
 		return effect == constants.CONTEXT.EFFECTS.DRAW_FOUR
