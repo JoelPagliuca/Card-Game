@@ -33,7 +33,7 @@ class SimpleRulesTests(CGTestCase):
 	
 	def test_get_options(self):
 		opts = SimpleRules.get_options(self.player1)
-		self.assertIsInstance(opts[0], action.DrawCard)
+		self.assertIsInstance(opts[0], action.Action)
 		self.gm.who_shuffled()
 		opts = SimpleRules.get_options(self.player1)
 		self.assertEqual(len(opts), self.gm.rules.CARDS_TO_DEAL+1) # now 1 option per card + draw card
@@ -49,8 +49,8 @@ class MelbourneRulesTests(CGTestCase):
 		# test a draw two
 		draw_two = Card(constants.CARD_DRAW_TWO, constants.CARD_BLUE)
 		another_draw_two = Card(constants.CARD_DRAW_TWO, constants.CARD_PURPLE)
-		draw_two.actions.append(action.PlusTwo(draw_two))
-		another_draw_two.actions.append(action.PlusTwo(another_draw_two))
+		draw_two.actions.append(action.Action(draw_two,"",[action.PlusTwo]))
+		another_draw_two.actions.append(action.Action(another_draw_two,"",[action.PlusTwo]))
 		ctx = {constants.CONTEXT.TOP_CARD: draw_two, constants.CONTEXT.CURRENT_EFFECT: constants.CONTEXT.EFFECTS.DRAW_TWO, constants.CONTEXT.CURRENT_EFFECT_VALUE: 2}
 		self.assertFalse(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_RED), ctx))
 		self.assertFalse(MelbourneRules.can_be_played(Card(constants.CARD_EIGHT, constants.CARD_BLUE), ctx))
@@ -66,5 +66,4 @@ class MelbourneRulesTests(CGTestCase):
 		ctx = {constants.CONTEXT.TOP_CARD: Card(constants.CARD_ONE, constants.CARD_BLUE)}
 		self.gm.who_shuffled()
 		opts = MelbourneRules.get_options(self.player1, ctx)
-		print opts
-		self.assertIsInstance(opts[0], action.DrawCard)
+		self.assertIs(opts[0].effects[0], action.DrawCard)
