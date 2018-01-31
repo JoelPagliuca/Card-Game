@@ -9,4 +9,7 @@ class BaseHandler(websocket.WebSocketHandler):
 	all other handlers should subclass this one.
 	"""
 	def check_origin(self, origin):
+		"""
+		TODO don't let every origin maybe
+		"""
 		return True

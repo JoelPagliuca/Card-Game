@@ -5,6 +5,8 @@ from mock import patch, MagicMock, ANY
 from base_test import CGTestCase
 
 from card_game import constants
+from card_game import action
+from card_game.rules import SimpleRules
 
 class EngineTests(CGTestCase):
 	
@@ -41,13 +43,6 @@ class EngineTests(CGTestCase):
 		self.assertGreater(len(self.player2.hand), 0)
 		self.assertGreater(len(self.player3.hand), 0)
 		self.gm.shuffle()
-	
-	def test_get_options(self):
-		opts = self.gm.get_options(self.player1)
-		self.assertEqual(opts[0], constants.CHOICE_DRAW_CARD) # only option with no cards should be DRAW CARD
-		self.gm.who_shuffled()
-		opts = self.gm.get_options(self.player1)
-		self.assertEqual(len(opts), self.gm.rules.CARDS_TO_DEAL+1) # now 1 option per card + draw card
 
 	def test_shuffle(self):
 		cards_in_deck = len(self.gm.deck._cards)
@@ -71,6 +66,8 @@ class EngineTests(CGTestCase):
 		dummy = MagicMock() # will have .update function ;)
 		self.gm.observe(dummy)
 		self.assertListEqual(self.gm._observers, [dummy])
+		self.gm.deleteObserver(dummy)
+		self.assertListEqual(self.gm._observers, [])
 	
 	def test_observe_contract(self):
 		# make sure we have a tantrum if the observer cannot observe
@@ -79,6 +76,12 @@ class EngineTests(CGTestCase):
 		with self.assertRaises(Exception):
 			self.gm.observe(dummy)
 		self.assertListEqual(self.gm._observers, [])
+	
+	@patch.object(SimpleRules, 'cards_to_deal')
+	def test_who_shuffled_too_many_cards(self, mock):
+		mock.return_value = 50
+		with self.assertRaises(AssertionError):
+			self.gm.who_shuffled()
 	
 	def test_update_observers(self):
 		# check if the observers are updated
@@ -103,4 +106,4 @@ class TextInterfaceTests(CGTestCase):
 	def test_get_choice_sad(self, mock):
 		options = ["zero", "one", "two (option 3)"]
 		value = self.ti.get_choice(options)
-		self.assertEqual(value, 2)
+		self.assertEqual(value, options[2])
