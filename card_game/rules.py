@@ -118,7 +118,7 @@ class MelbourneRules(SimpleRules):
 		effect_match = False
 		if top_card:
 			# check if the value or suit match
-			if (top_card.suit == card.suit) or card.suit == constants.CARD_BLACK:
+			if (top_card.suit == card.suit) or (card.suit == constants.CARD_BLACK) or (top_card.suit == constants.CARD_BLACK):
 				suit_match = True
 			elif top_card.value == card.value:
 				value_match = True
