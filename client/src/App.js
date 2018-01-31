@@ -133,7 +133,6 @@ class Game extends Component {
 
   sendInput(value) {
     // send the input to the server, get rid of all the available actions
-    console.log(value);
     this.gameSocketComponent.sendMessage({"input": value.toString()});
     this.setState({
       card_actions: {},
