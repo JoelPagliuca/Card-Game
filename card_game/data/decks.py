@@ -38,7 +38,7 @@ for col in constants.CARD_COLORS:
 	CARDS_ACTION.append(card)
 	# skip
 	card = Card(constants.CARD_SKIP, col)
-	card.actions.append(Action(card, "Skip", [PlayCard, Reverse]))
+	card.actions.append(Action(card, "Skip", [PlayCard, Skip]))
 	CARDS_ACTION.append(card)
 	# draw two
 	card = Card(constants.CARD_DRAW_TWO, col)
