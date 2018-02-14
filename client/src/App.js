@@ -8,6 +8,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
 
 import GameSelector from './GameSelector'
 import { Card, CardWithActions } from "./Card";
@@ -118,7 +119,8 @@ class Game extends Component {
       }
     });
     this.setState({
-      card_actions: actions
+      card_actions: actions,
+      isPlayerTurn: true
     });
   }
 
@@ -136,8 +138,9 @@ class Game extends Component {
     this.gameSocketComponent.sendMessage({"input": value.toString()});
     this.setState({
       card_actions: {},
-      drawCardAction: {}
-    })
+      drawCardAction: {},
+      isPlayerTurn: false
+    });
   }
 
   render() {
@@ -164,15 +167,17 @@ class Game extends Component {
         {this.gameSocketComponent.render()}
         <Grid container item xs={4}>
           {top_card_render}
-          {this.state.drawCardAction && 
-            <Grid item xs={6}>
+          {this.state.isPlayerTurn && 
+            <Grid item xs={6} direction="column">
               <Card 
                 text=""
                 suit={SUITS.BLACK}
               />
-              <button href="#" onClick={this.sendInput.bind(this, this.state.drawCardAction.id)}>
-                Draw
-              </button>
+              <Grid item>
+                <Button raised color="default" onClick={this.sendInput.bind(this, this.state.drawCardAction.id)}>
+                  Draw
+                </Button>
+              </Grid>
             </Grid>
           }
         </Grid>

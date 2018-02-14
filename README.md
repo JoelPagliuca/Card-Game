@@ -1,6 +1,8 @@
 # Card Game
 
-Python code for playing card games. Not a heap of functionality so far.
+UNO, implemented in Python and ReactJS.
+
+![game screenshot](readme_assets/game_screenshot1.png)
 
 ## Build Status
 | Branch | Status |
@@ -13,8 +15,6 @@ Python code for playing card games. Not a heap of functionality so far.
 
 ## Running
 `docker-compose up`
-
-Game is served [here](http://127.0.0.1:2180/)
 
 Game start page is [here](http://127.0.0.1:2180/#/start)
 
@@ -57,6 +57,8 @@ Game start page is [here](http://127.0.0.1:2180/#/start)
 	* server - python-tornado websocket
 * test/
 	* unit tests
+* readme_assets/
+	* content required for this README.md
 * .gitignore
 * .travis.yml
 	* travis build config
