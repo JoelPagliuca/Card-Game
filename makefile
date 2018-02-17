@@ -23,6 +23,9 @@ demo:		## Run the manual testing setup
 server:		## Run the python WebSocket server
 	$(PYTHON) server/app.py
 
+prod:		## Run the prod docker setup
+	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up 
+
 environment:	## Make the virtualenv
 	virtualenv venv
 

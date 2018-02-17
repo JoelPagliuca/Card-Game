@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  
+  client:
+    command: yarn build
+    volumes:
+      - static-content:/home/app/server/build
+  
+  server:
+    environment:
+      DEPLOYMENT_TYPE: 'PRODUCTION'
+  
+  proxy:
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+      - static-content:/usr/share/nginx/html
+
+volumes:
+  static-content:
