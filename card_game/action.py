@@ -4,6 +4,7 @@ All actions will be given pointers to the card and game_manager
 Assume that the current player is who played the card with the action
 """
 from abc import ABCMeta, abstractmethod
+import logging
 
 import constants
 
@@ -102,8 +103,12 @@ class PlayCard(Effect):
 	"""Just play the card"""
 	@classmethod
 	def apply(cls, card, game_manager):
-		player = game_manager.current_player()
-		player.hand.remove(card)
+		try:
+			player = game_manager.current_player()
+			player.hand.remove(card)
+		except ValueError:
+			# this action was played from the deck
+			logging.debug(str(card) + " was played first")
 		game_manager.pile.play_card(card)
 
 class DrawCard(Effect):

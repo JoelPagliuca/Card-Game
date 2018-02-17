@@ -88,7 +88,9 @@ class GameManager(object):
 		self._context[constants.CONTEXT.CURRENT_EFFECT] = None
 		self._context[constants.CONTEXT.CURRENT_EFFECT_VALUE] = 0
 		self.who_shuffled()
-		self.pile.play_card(self.deck.draw_card())
+		first_card = self.deck.draw_card()
+		first_action = random.choice(first_card.actions)
+		first_action.run(self)
 		logging.debug("starting game")
 		self.running = True
 	
