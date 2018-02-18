@@ -59,6 +59,8 @@ Game start page is [here](http://127.0.0.1:2180/#/start)
 	* unit tests
 * readme_assets/
 	* content required for this README.md
+* proxy/
+	* files for the nginx reverse proxy
 * .gitignore
 * .travis.yml
 	* travis build config

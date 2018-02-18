@@ -5,7 +5,7 @@ services:
   client:
     command: yarn build
     volumes:
-      - static-content:/home/app/server/build
+      - ./client/build:/home/app/server/build
   
   server:
     environment:
@@ -13,8 +13,5 @@ services:
   
   proxy:
     volumes:
-      - ./nginx.prod.conf:/etc/nginx/nginx.conf
-      - static-content:/usr/share/nginx/html
-
-volumes:
-  static-content:
+      - ./proxy/nginx.prod.conf:/etc/nginx/nginx.conf
+      - ./client/build:/usr/share/nginx/html
