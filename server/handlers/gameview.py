@@ -70,11 +70,26 @@ class GameViewHandler(BaseHandler):
 		current_player = data.get(constants.CONTEXT.CURRENT_PLAYER)
 		top_card = data.get(constants.CONTEXT.TOP_CARD)
 		players = data.get(constants.CONTEXT.PLAYERS)
+		action = ACTION.UPDATE
 		output = {
-			"action": ACTION.UPDATE,
+			"action": action,
 			"current_player": current_player.toDict(),
 			"players": map(lambda p:p.toDict(), players),
 			"hand": map(lambda c:c.toDict(), self.player.hand),
 			"top_card": top_card.toDict(),
+		}
+		self.write_message(output)
+	
+	def game_end(self, data):
+		"""
+		receive the final game context
+
+		:type data: dict
+		"""
+		action = ACTION.FINISH
+		winner = data.get(constants.CONTEXT.WINNER)
+		output = {
+			"action": action,
+			"winner": winner.toDict()
 		}
 		self.write_message(output)

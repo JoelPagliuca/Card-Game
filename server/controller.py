@@ -10,7 +10,20 @@ from card_game.engine import GameManager
 from card_game.rules import MelbourneRules as RULES
 from card_game.data.decks import GET_UNO_DECK as GET_DECK
 
-__all__ = ["GameController"]
+__all__ = ["GameController", "GameThread"]
+
+class GameThread(threading.Thread):
+	"""
+	Thread for running the game, note the game and controller
+	"""
+	def __init__(self, game, controller, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):
+		super(GameThread, self).__init__(group=group, target=target, name=name, verbose=verbose)
+		self._game = game
+		self._controller = controller
+	
+	def run(self):
+		results = self._game.run()
+		self._controller.finish_game(results)
 
 class GameController(object):
 	"""deals with the game and provides a nicer interface for the WebSocket view"""
@@ -42,7 +55,7 @@ class GameController(object):
 		self._game.interface = WebSocketInterface
 		for _, client in self.clients.items():
 			self._game.observe(client)	# FIXME do real observer pattern, client.observe(observable)
-		game_thread = threading.Thread(target=self._game.run)
+		game_thread = GameThread(self._game, self)
 		game_thread.start()
 	
 	def stop_game(self):
@@ -54,3 +67,13 @@ class GameController(object):
 			self.clients[player].close()	# FIXME write out a GAME_OVER message to the client
 		self.clients.clear()
 		self._game.running = False
+	
+	def finish_game(self, results):
+		"""
+		End game gracefully because of a win
+
+		:param dict results: final game context from the game manager
+		"""
+		for _, client in self.clients.iteritems():
+			client.game_end(results)
+		self.stop_game()

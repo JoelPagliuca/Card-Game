@@ -14,9 +14,10 @@ UNO, implemented in Python and ReactJS.
 * `docker-compose`
 
 ## Running
-`docker-compose up`
+* *Dev*: `docker-compose up`
+* *Prod*: `make prod`
 
-Game start page is [here](http://127.0.0.1:2180/#/start)
+**Game start page is [here](http://127.0.0.1:2180/#/start)**
 
 ## Development
 ### Dependencies
