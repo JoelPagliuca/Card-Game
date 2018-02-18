@@ -70,8 +70,11 @@ class GameViewHandler(BaseHandler):
 		current_player = data.get(constants.CONTEXT.CURRENT_PLAYER)
 		top_card = data.get(constants.CONTEXT.TOP_CARD)
 		players = data.get(constants.CONTEXT.PLAYERS)
+		action = ACTION.UPDATE
+		if data.has_key(constants.CONTEXT.WINNER):
+			action = ACTION.FINISH
 		output = {
-			"action": ACTION.UPDATE,
+			"action": action,
 			"current_player": current_player.toDict(),
 			"players": map(lambda p:p.toDict(), players),
 			"hand": map(lambda c:c.toDict(), self.player.hand),

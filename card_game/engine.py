@@ -163,6 +163,7 @@ class GameManager(object):
 				logging.debug("shuffling")
 				self.shuffle()
 		logging.debug("Game ended")
+		self.update_observers()
 		return self._context
 
 class TextInterface(object):
