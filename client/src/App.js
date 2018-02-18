@@ -20,7 +20,8 @@ export const CONSTANTS = {
   CARD_HEIGHT: 150,
   ACTIONS: {
     UPDATE: "UPDATE",
-    OPTION: "OPTION"
+    OPTION: "OPTION",
+    FINISH: "FINISH"
   }
 };
 
@@ -55,6 +56,9 @@ export class GameSocketComponent extends Component {
         break;
       case CONSTANTS.ACTIONS.OPTION:
         this.props.displayTurn(data)
+        break;
+      case CONSTANTS.ACTIONS.FINISH:
+        alert("Game over, winner was: "+data.winner.name);
         break;
       default:
         console.log("action was not an expected value");
