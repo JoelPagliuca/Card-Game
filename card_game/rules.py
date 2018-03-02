@@ -115,9 +115,8 @@ class MelbourneRules(SimpleRules):
 		if top_card:
 			suit_or_value_match = cls._check_suit_or_value_match(top_card, card)
 			effect = context.get(constants.CONTEXT.CURRENT_EFFECT, None)
-			effect_match = cls._check_effect_match()
-
-			logging.debug("About to return effect:{}, suit:{}, value:{}".format(effect_match, suit_match, value_match))
+			effect_match = cls._check_effect_match(card, effect)
+			logging.debug("About to return effect:{}, suit/value:{}".format(effect_match, suit_or_value_match))
 			return effect_match and suit_or_value_match
 		else:
 			return True
