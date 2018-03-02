@@ -112,24 +112,42 @@ class MelbourneRules(SimpleRules):
 		"""More complex implementation"""
 		top_card = context.get(constants.CONTEXT.TOP_CARD, None)
 		logging.debug("Trying to play (" + str(card) + ") on (" + str(top_card) + ")")
-		# variables used to determine if the card is playable
-		suit_match = False
-		value_match = False
-		effect_match = False
 		if top_card:
-			# check if the value or suit match
-			if (top_card.suit == card.suit) or (card.suit == constants.CARD_BLACK) or (top_card.suit == constants.CARD_BLACK):
-				suit_match = True
-			elif top_card.value == card.value:
-				value_match = True
-			if context.get(constants.CONTEXT.CURRENT_EFFECT, None):
-				effect = context[constants.CONTEXT.CURRENT_EFFECT]
-				for act in card.actions:
-					if act.has_effect(effect):
-						effect_match = True
-			else:
-				effect_match = True
+			suit_or_value_match = cls._check_suit_or_value_match(top_card, card)
+			effect = context.get(constants.CONTEXT.CURRENT_EFFECT, None)
+			effect_match = cls._check_effect_match(card, effect)
+			logging.debug("About to return effect:{}, suit/value:{}".format(effect_match, suit_or_value_match))
+			return effect_match and suit_or_value_match
 		else:
 			return True
-		logging.debug("About to return effect:{}, suit:{}, value:{}".format(effect_match, suit_match, value_match))
-		return effect_match and (suit_match or value_match)
+	
+	@classmethod
+	def _check_suit_or_value_match(cls, card1, card2):
+		"""
+		check the suit/value for playability
+
+		:param card1:
+		:type card1: :class:`card_game.card.Card`
+		:param card2:
+		:type card2: :class:`card_game.card.Card`
+		:rtype: bool
+		"""
+		suit_match, value_match = False, False
+		if (card1.suit == card2.suit) or (card2.suit == constants.CARD_BLACK) or (card1.suit == constants.CARD_BLACK):
+			suit_match = True
+		if card1.value == card2.value:
+			value_match = True
+		return suit_match or value_match
+	
+	@classmethod
+	def _check_effect_match(cls, card, effect):
+		"""
+		check if the card contains an action with the correct effect
+		"""
+		if effect:
+			for act in card.actions:
+				if act.has_effect(effect):
+					return True
+			return False
+		else:
+			return True

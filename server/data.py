@@ -10,3 +10,4 @@ class ACTION():
 	"""
 	UPDATE = "UPDATE"	# game state update
 	OPTION = "OPTION"	# request option selection from user
+	FINISH = "FINISH"	# game over

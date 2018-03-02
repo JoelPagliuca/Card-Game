@@ -84,6 +84,7 @@ class Effect(object):
 	Base class for all Effects, 
 	these implement the special cards in the game
 	"""
+	EFFECT = None
 	__metaclass__ = ABCMeta
 	@abstractmethod
 	def apply(cls, card, game_manager):
@@ -97,7 +98,7 @@ class Effect(object):
 		:param str effect: the effect we're checking
 		:rtype: bool
 		"""
-		return False
+		return effect == cls.EFFECT
 
 class PlayCard(Effect):
 	"""Just play the card"""
@@ -140,10 +141,7 @@ class Skip(Effect):
 		game_manager.next_player()
 
 class PlusTwo(Effect):
-	@classmethod
-	def has_effect(cls, effect):
-		"""actually checking if there's a PLUS2 in effect"""
-		return effect == constants.CONTEXT.EFFECTS.DRAW_TWO
+	EFFECT = constants.CONTEXT.EFFECTS.DRAW_TWO
 	
 	@classmethod
 	def apply(cls, card, game_manager):
@@ -154,10 +152,7 @@ class PlusTwo(Effect):
 		ctx[constants.CONTEXT.CURRENT_EFFECT_VALUE] = current_stack
 
 class PlusFour(Effect):
-	@classmethod
-	def has_effect(cls, effect):
-		"""actually checking if there's a PLUS4 in effect"""
-		return effect == constants.CONTEXT.EFFECTS.DRAW_FOUR
+	EFFECT = constants.CONTEXT.EFFECTS.DRAW_FOUR
 	
 	@classmethod
 	def apply(cls, card, game_manager):
