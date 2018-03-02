@@ -16,8 +16,8 @@ class GameThread(threading.Thread):
 	"""
 	Thread for running the game, note the game and controller
 	"""
-	def __init__(self, game, controller, group=None, target=None, name=None, args=(), kwargs=None, verbose=None):
-		super(GameThread, self).__init__(group=group, target=target, name=name, verbose=verbose)
+	def __init__(self, game, controller):
+		super(GameThread, self).__init__()
 		self._game = game
 		self._controller = controller
 	
